@@ -12,6 +12,9 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
+  <!-- PDF.js library for client-side PDF parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+
   <style>
     :root {
       --font-title: 'Outfit', sans-serif;
@@ -418,7 +421,7 @@
 
       <div class="controls-row">
         <div class="editor-selects">
-          <div class="form-group" style="margin-bottom:0; min-width: 250px;">
+          <div class="form-group" style="margin-bottom:0; min-width: 200px;">
             <label for="editor-dataset-select">Select Target Source:</label>
             <select id="editor-dataset-select">
               <option value="may22">22-May-2026 (Detailed Warnings)</option>
@@ -426,7 +429,7 @@
             </select>
           </div>
           
-          <div class="form-group" id="editor-day-group" style="margin-bottom:0; min-width: 150px; display: none;">
+          <div class="form-group" id="editor-day-group" style="margin-bottom:0; min-width: 140px; display: none;">
             <label for="editor-day-select">Select Timeline Day:</label>
             <select id="editor-day-select">
               <option value="1">Day 1 (19-May)</option>
@@ -437,6 +440,12 @@
               <option value="6">Day 6 (24-May)</option>
               <option value="7">Day 7 (25-May)</option>
             </select>
+          </div>
+
+          <!-- PDF file upload auto-fill -->
+          <div class="form-group" style="margin-bottom:0; min-width: 250px;">
+            <label for="pdf-upload"><i class="fa-solid fa-file-pdf"></i> Upload PDF to Auto-Fill:</label>
+            <input type="file" id="pdf-upload" accept=".pdf" style="padding: 0.35rem 0.5rem; font-size: 0.75rem;">
           </div>
         </div>
 
@@ -661,7 +670,10 @@
           
           if (intensity === 'HEAVY') { level = "orange"; code = "Heavy + GW"; }
           else if (intensity === 'LIGHT') { level = "green-yellow"; code = "Light + GW"; }
-          else if (intensity === 'H') { level = "red"; code = "H + GR + GW"; }
+          else if (intensity === 'H' || intensity.includes('H(') || intensity.includes('VH(') || intensity.includes('EXH(') || intensity.includes('ExH(')) {
+            level = "red";
+            code = "H + GR + GW";
+          }
           else if (intensity === 'L/M') {
             const coastal = ["DAKSHINA KANNADA", "UDUPI", "UTTARA KANNADA"];
             if (coastal.includes(district)) {
@@ -757,6 +769,198 @@
       setTimeout(() => {
         toast.classList.remove('show');
       }, 3000);
+    }
+
+    // Set up PDF.js worker workerSrc URL
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+    document.getElementById('pdf-upload').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      showToast("Reading and parsing PDF report...");
+
+      const reader = new FileReader();
+      reader.onload = async function() {
+        try {
+          const typedarray = new Uint8Array(this.result);
+          const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+          
+          let fullText = "";
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            
+            // Reconstruct text lines by y-coordinate sorting
+            const items = content.items;
+            const linesMap = {};
+            items.forEach(item => {
+              const y = Math.round(item.transform[5] * 10) / 10;
+              const x = item.transform[4];
+              if (!linesMap[y]) linesMap[y] = [];
+              linesMap[y].push({ text: item.str, x: x });
+            });
+            const sortedY = Object.keys(linesMap).map(Number).sort((a, b) => b - a);
+            sortedY.forEach(y => {
+              const lineItems = linesMap[y].sort((a, b) => a.x - b.x);
+              const lineText = lineItems.map(item => item.text).join(" ").trim();
+              if (lineText) {
+                fullText += lineText + "\n";
+              }
+            });
+          }
+
+          // Parse the extracted text for district warnings
+          const parsedForecast = parseExtractedPDFText(fullText);
+          
+          // Apply parsed values to in-memory datasets
+          const dbType = document.getElementById('editor-dataset-select').value;
+          
+          if (dbType === 'may22') {
+            // Apply to May 22 alerts
+            Object.keys(parsedForecast).forEach(dist => {
+              const info = parsedForecast[dist];
+              const d1 = info.day1 || { intensity: "DRY", warning: "NIL" };
+              
+              let level = "grey";
+              let code = "Dry";
+              let intensity = d1.intensity;
+              let warning = d1.warning;
+
+              if (intensity === 'HEAVY') { level = "orange"; code = "Heavy + GW"; }
+              else if (intensity === 'LIGHT') { level = "green-yellow"; code = "Light + GW"; }
+              else if (intensity === 'H' || intensity.includes('H(') || intensity.includes('VH(') || intensity.includes('EXH(') || intensity.includes('ExH(')) {
+                level = "red";
+                code = "H + GR + GW";
+              }
+              else if (intensity === 'L/M') {
+                const coastal = ["DAKSHINA KANNADA", "UDUPI", "UTTARA KANNADA"];
+                if (coastal.includes(dist)) {
+                  level = "blue";
+                  code = "L/M TSH";
+                } else {
+                  level = "yellow";
+                  code = "L/M + GW";
+                }
+              }
+
+              currentMay22[dist] = {
+                intensity: intensity,
+                warning: warning,
+                probability: d1.probability || "VERY LIKELY",
+                code: code,
+                level: level
+              };
+            });
+          } else {
+            // Apply all 7 days of forecast to May 19
+            Object.keys(parsedForecast).forEach(dist => {
+              if (!currentMay19[dist]) currentMay19[dist] = {};
+              for (let d = 1; d <= 7; d++) {
+                currentMay19[dist][`day${d}`] = parsedForecast[dist][`day${d}`] || {
+                  intensity: "DRY",
+                  warning: "NIL",
+                  probability: "VERY LIKELY"
+                };
+              }
+            });
+          }
+
+          // Render updated table
+          renderEditor();
+          showToast("PDF parsed successfully! Warnings auto-filled below.");
+          
+        } catch (err) {
+          console.error("PDF Parsing error:", err);
+          showToast("Error parsing PDF file. Ensure it is a valid IMD forecast report.", true);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    // JavaScript parser for IMD Forecast text content
+    function parseExtractedPDFText(text) {
+      const parsedData = {};
+      const lines = text.split("\n").map(l => l.toUpperCase().replace(/\s+/g, " ").trim());
+
+      districtNames.forEach(dist => {
+        // Find intensity line containing district name and 'INTENSITY'
+        let intensityLineIdx = -1;
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].includes(dist) && lines[i].includes("INTENSITY") && !lines[i].includes("MET SUB.DIVISION")) {
+            intensityLineIdx = i;
+            break;
+          }
+        }
+
+        if (intensityLineIdx !== -1) {
+          const intensityLine = lines[intensityLineIdx];
+          
+          // Extract the part after 'INTENSITY'
+          const intensityPartIdx = intensityLine.indexOf("INTENSITY");
+          const valuesStr = intensityLine.substring(intensityPartIdx + "INTENSITY".length).trim();
+          
+          // Split values by space
+          const tokens = valuesStr.split(" ").filter(t => t.length > 0);
+          
+          // Find corresponding probability line (first line containing 'PROBABILITY' starting from intensityLineIdx + 1)
+          let probLineStr = "";
+          for (let i = intensityLineIdx + 1; i < lines.length; i++) {
+            if (lines[i].includes("PROBABILITY")) {
+              probLineStr = lines[i];
+              break;
+            }
+          }
+          
+          // Parse probability tokens
+          let probValues = [];
+          if (probLineStr) {
+            const probPartIdx = probLineStr.indexOf("PROBABILITY");
+            const probStr = probLineStr.substring(probPartIdx + "PROBABILITY".length).trim();
+            
+            // Tokenize probability string
+            const pTokens = probStr.split(" ").filter(t => t.length > 0);
+            let pIdx = 0;
+            while (pIdx < pTokens.length) {
+              const token = pTokens[pIdx];
+              if (token.startsWith("V") || token.startsWith("S")) {
+                // VERY LIKELY
+                probValues.push("VERY LIKELY");
+                pIdx += 2;
+              } else if (token.includes("MOST")) {
+                probValues.push("MOST LIKELY");
+                pIdx += 2;
+              } else if (token.includes("LIKELY") || token.includes("LKLY")) {
+                probValues.push("LIKELY");
+                pIdx += 1;
+              } else if (token === "NIL") {
+                probValues.push("NIL");
+                pIdx += 1;
+              } else {
+                if (token.length > 1) {
+                  probValues.push("VERY LIKELY");
+                }
+                pIdx += 1;
+              }
+            }
+          }
+          
+          parsedData[dist] = {};
+          
+          for (let d = 1; d <= 7; d++) {
+            const intensity = tokens[(d - 1) * 2] || "DRY";
+            const warning = tokens[(d - 1) * 2 + 1] || "NIL";
+            const probability = probValues[d - 1] || "VERY LIKELY";
+            
+            parsedData[dist][`day${d}`] = {
+              intensity: intensity,
+              warning: warning,
+              probability: probability
+            };
+          }
+        }
+      });
+      return parsedData;
     }
 
     // Check login state on page load
