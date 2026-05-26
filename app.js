@@ -106,6 +106,35 @@ function loadCustomDataFromStorage() {
   }
 }
 
+async function loadCustomData() {
+  try {
+    const response = await fetch('forecast_data.json');
+    if (response.ok) {
+      const data = await response.json();
+      customMay22 = data.customMay22 || null;
+      customMay19 = data.customMay19 || null;
+      
+      const savedDate19 = data.customMay19ForecastDate;
+      if (savedDate19) {
+        updateDatesMapping(savedDate19);
+        localStorage.setItem('custom_may19_forecast_date', savedDate19);
+      } else {
+        updateDatesMapping("19-May-2026");
+      }
+      
+      const savedDate22 = data.customMay22ForecastDate;
+      if (savedDate22) {
+        localStorage.setItem('custom_may22_forecast_date', savedDate22);
+      }
+    } else {
+      loadCustomDataFromStorage();
+    }
+  } catch (e) {
+    console.error("Error loading forecast_data.json, falling back to LocalStorage:", e);
+    loadCustomDataFromStorage();
+  }
+}
+
 // May 22, 2026 Weather Warnings Dataset (from screenshots)
 const may22Data = {
   // Coastal Karnataka
@@ -1019,7 +1048,7 @@ function initMap() {
 }
 
 // Trigger initialiser on load, loading custom warning storage first
-window.addEventListener('DOMContentLoaded', () => {
-  loadCustomDataFromStorage();
+window.addEventListener('DOMContentLoaded', async () => {
+  await loadCustomData();
   init();
 });
