@@ -83,6 +83,16 @@ function updateDatesMapping(startDateStr) {
       label: `Day ${d} (Forecast valid to ${dayOfMonthNext}${suffix(dayOfMonthNext)} 08:30 IST)`
     };
   }
+
+  // Update slider ticks dynamically with the calculated dates
+  const ticks = document.querySelectorAll('.slider-ticks .tick');
+  ticks.forEach(t => {
+    const d = parseInt(t.getAttribute('data-day'));
+    if (datesMapping[d]) {
+      const parts = datesMapping[d].date.split("-");
+      t.innerText = `Day ${d} (${parts[0]}-${parts[1]})`;
+    }
+  });
 }
 
 function loadCustomDataFromStorage() {
@@ -338,11 +348,8 @@ function getFeatureStyle(feature) {
   };
 }
 
-// Tooltip binders
-function onEachFeature(feature, layer) {
-  const props = feature.properties;
-  const data = getDistrictData(props.matched_name, props.district);
-  
+// Helper to get tooltip HTML
+function getTooltipHTML(props, data) {
   let lvlText = "No Alert";
   let txtCol = colorScale.greyDark;
   if (data.level === 'red') { lvlText = "Red · Warning"; txtCol = colorScale.red; }
@@ -351,7 +358,7 @@ function onEachFeature(feature, layer) {
   else if (data.level === 'green-yellow') { lvlText = "Green-Yellow · Watch"; txtCol = colorScale.greenYellowDark; }
   else if (data.level === 'blue') { lvlText = "Blue · Watch"; txtCol = colorScale.blue; }
 
-  layer.bindTooltip(`
+  return `
     <div class="custom-tooltip">
       <div class="tooltip-title">${capitalizeName(props.district)}</div>
       <div class="tooltip-row">
@@ -367,7 +374,15 @@ function onEachFeature(feature, layer) {
         <span class="tooltip-val">${data.warning}</span>
       </div>
     </div>
-  `, {
+  `;
+}
+
+// Tooltip binders
+function onEachFeature(feature, layer) {
+  const props = feature.properties;
+  const data = getDistrictData(props.matched_name, props.district);
+  
+  layer.bindTooltip(getTooltipHTML(props, data), {
     sticky: true,
     direction: 'auto',
     className: 'leaflet-tooltip-own'
@@ -394,6 +409,44 @@ function onEachFeature(feature, layer) {
       selectDistrict(feature, layer);
     }
   });
+}
+
+// Map layer styling and tooltip update helper (in-place)
+function updateMapData() {
+  if (!state.geojsonLayer) return;
+
+  state.geojsonLayer.eachLayer(layer => {
+    const props = layer.feature.properties;
+    const data = getDistrictData(props.matched_name, props.district);
+    
+    // Update style
+    const style = getFeatureStyle(layer.feature);
+    layer.setStyle(style);
+    
+    // Update tooltip content
+    if (layer.getTooltip()) {
+      layer.setTooltipContent(getTooltipHTML(props, data));
+    }
+  });
+
+  // Restore selection outlines and open tooltip programmatically
+  if (state.selectedDistrict) {
+    state.geojsonLayer.eachLayer(layer => {
+      if (layer.feature.properties.cartodb_id === state.selectedDistrict.properties.cartodb_id) {
+        layer.setStyle({
+          fillOpacity: 0.85,
+          color: '#ffffff',
+          weight: 2.5
+        });
+        
+        if (layer.openTooltip) {
+          setTimeout(() => {
+            layer.openTooltip();
+          }, 50);
+        }
+      }
+    });
+  }
 }
 
 // Set active district selections
@@ -767,8 +820,10 @@ function setDay(dayNum) {
     }
   });
 
-  // Re-render components
+  // Re-render components (in-place if already loaded)
   if (state.geojsonLayer) {
+    updateMapData();
+  } else if (state.geojsonCache) {
     renderMapData();
   }
   updateStatistics();
@@ -798,7 +853,11 @@ function setDataset(datasetName) {
     // Stop timeline playback
     if (state.isPlaying) togglePlayback();
     
-    renderMapData();
+    if (state.geojsonLayer) {
+      updateMapData();
+    } else if (state.geojsonCache) {
+      renderMapData();
+    }
     updateStatistics();
     renderRegionalTables();
   } else {

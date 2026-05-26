@@ -517,6 +517,70 @@
       return n.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     }
 
+    // Parse date helper (same as app.js)
+    function parseDateString(dateStr) {
+      const cleanStr = dateStr.replace(/[\/\.]/g, "-");
+      const parts = cleanStr.split("-");
+      if (parts.length < 3) return new Date();
+      
+      let day = parseInt(parts[0], 10);
+      let monthStr = parts[1];
+      let year = parseInt(parts[2], 10);
+      if (year < 100) year += 2000;
+      
+      let month = 0;
+      const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+      const matchedMonthIndex = monthNames.findIndex(m => monthStr.toLowerCase().startsWith(m));
+      
+      if (matchedMonthIndex !== -1) {
+        month = matchedMonthIndex;
+      } else {
+        month = parseInt(monthStr, 10) - 1;
+      }
+      
+      return new Date(year, month, day);
+    }
+
+    // Dynamic dropdown labels in admin panel
+    function updateAdminDropdownLabels() {
+      const forecastDateInput = document.getElementById('forecast-date-input');
+      if (!forecastDateInput) return;
+      const dateStr = forecastDateInput.value.trim();
+      if (!dateStr) return;
+
+      // Update editor-dataset-select options
+      const datasetSelect = document.getElementById('editor-dataset-select');
+      if (datasetSelect) {
+        const optMay22 = datasetSelect.querySelector('option[value="may22"]');
+        if (optMay22) {
+          const date22 = (datasetSelect.value === 'may22') ? dateStr : (localStorage.getItem('custom_may22_forecast_date') || "22-May-2026");
+          optMay22.textContent = `${date22} (Day 1 Warnings)`;
+        }
+        const optMay19 = datasetSelect.querySelector('option[value="may19"]');
+        if (optMay19) {
+          const date19 = (datasetSelect.value === 'may19') ? dateStr : (localStorage.getItem('custom_may19_forecast_date') || "19-May-2026");
+          optMay19.textContent = `${date19} (7-Day Forecast)`;
+        }
+      }
+
+      // Update editor-day-select options based on the dateStr
+      const daySelect = document.getElementById('editor-day-select');
+      if (daySelect) {
+        const startDate = parseDateString(dateStr);
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        for (let d = 1; d <= 7; d++) {
+          const currentDate = new Date(startDate.getTime());
+          currentDate.setDate(startDate.getDate() + (d - 1));
+          const day = String(currentDate.getDate()).padStart(2, '0');
+          const month = months[currentDate.getMonth()];
+          const opt = daySelect.querySelector(`option[value="${d}"]`);
+          if (opt) {
+            opt.textContent = `Day ${d} (${day}-${month})`;
+          }
+        }
+      }
+    }
+
     // Load initial defaults and local storage overrides
     async function loadData() {
       // 1. Fetch default GeoJSON boundaries to populate May 19 defaults
@@ -616,7 +680,8 @@
         // Populate initial github token
         document.getElementById('github-token-input').value = localStorage.getItem('github_access_token') || "";
 
-        // Build UI rows
+        // Build UI rows and update dropdown labels
+        updateAdminDropdownLabels();
         renderEditor();
 
       } catch (err) {
@@ -692,10 +757,14 @@
         dayGroup.style.display = 'none';
         document.getElementById('forecast-date-input').value = localStorage.getItem('custom_may22_forecast_date') || "22-May-2026";
       }
+      updateAdminDropdownLabels();
       renderEditor();
     });
 
     document.getElementById('editor-day-select').addEventListener('change', renderEditor);
+
+    // Dynamic date input field change listener
+    document.getElementById('forecast-date-input').addEventListener('input', updateAdminDropdownLabels);
 
     // Save warning inputs to Cache
     document.getElementById('save-btn').addEventListener('click', () => {
@@ -804,6 +873,7 @@
         document.getElementById('forecast-date-input').value = "19-May-2026";
       }
       
+      updateAdminDropdownLabels();
       renderEditor();
       showToast("Database restored to defaults.");
     });
@@ -890,7 +960,17 @@
           // Extract and display the date
           const extractedDate = extractForecastDate(fullText);
           if (extractedDate) {
-            document.getElementById('forecast-date-input').value = standardizeDateStr(extractedDate);
+            const stdDate = standardizeDateStr(extractedDate);
+            document.getElementById('forecast-date-input').value = stdDate;
+            
+            // Sync to local storage immediately
+            const dbType = document.getElementById('editor-dataset-select').value;
+            if (dbType === 'may22') {
+              localStorage.setItem('custom_may22_forecast_date', stdDate);
+            } else {
+              localStorage.setItem('custom_may19_forecast_date', stdDate);
+            }
+            updateAdminDropdownLabels();
           }
           
           // Apply parsed values to BOTH in-memory datasets simultaneously
