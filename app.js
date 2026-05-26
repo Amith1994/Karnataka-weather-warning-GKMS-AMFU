@@ -21,6 +21,68 @@ const state = {
 let customMay22 = null;
 let customMay19 = null;
 
+function parseDateString(dateStr) {
+  const cleanStr = dateStr.replace(/[\/\.]/g, "-");
+  const parts = cleanStr.split("-");
+  if (parts.length < 3) return new Date();
+  
+  let day = parseInt(parts[0], 10);
+  let monthStr = parts[1];
+  let year = parseInt(parts[2], 10);
+  if (year < 100) year += 2000;
+  
+  let month = 0;
+  const monthNames = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+  const matchedMonthIndex = monthNames.findIndex(m => monthStr.toLowerCase().startsWith(m));
+  
+  if (matchedMonthIndex !== -1) {
+    month = matchedMonthIndex;
+  } else {
+    month = parseInt(monthStr, 10) - 1;
+  }
+  
+  return new Date(year, month, day);
+}
+
+function formatDateToString(date) {
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+}
+
+const datesMapping = {};
+
+function updateDatesMapping(startDateStr) {
+  const startDate = parseDateString(startDateStr);
+  for (let d = 1; d <= 7; d++) {
+    const currentDate = new Date(startDate.getTime());
+    currentDate.setDate(startDate.getDate() + (d - 1));
+    
+    const nextDate = new Date(currentDate.getTime());
+    nextDate.setDate(currentDate.getDate() + 1);
+    
+    const suffix = (day) => {
+      if (day > 3 && day < 21) return 'th';
+      switch (day % 10) {
+        case 1:  return "st";
+        case 2:  return "nd";
+        case 3:  return "rd";
+        default: return "th";
+      }
+    };
+    
+    const formattedCurrent = formatDateToString(currentDate);
+    const dayOfMonthNext = nextDate.getDate();
+    
+    datesMapping[d] = {
+      date: formattedCurrent,
+      label: `Day ${d} (Forecast valid to ${dayOfMonthNext}${suffix(dayOfMonthNext)} 08:30 IST)`
+    };
+  }
+}
+
 function loadCustomDataFromStorage() {
   const local22 = localStorage.getItem('custom_may22_data');
   if (local22) {
@@ -34,18 +96,15 @@ function loadCustomDataFromStorage() {
   } else {
     customMay19 = null;
   }
-}
 
-// Dates corresponding to forecast days for may19
-const datesMapping = {
-  1: { date: "19-May-2026", label: "Day 1 (Forecast valid to 20th 08:30 IST)" },
-  2: { date: "20-May-2026", label: "Day 2 (Forecast valid to 21st 08:30 IST)" },
-  3: { date: "21-May-2026", label: "Day 3 (Forecast valid to 22nd 08:30 IST)" },
-  4: { date: "22-May-2026", label: "Day 4 (Forecast valid to 23rd 08:30 IST)" },
-  5: { date: "23-May-2026", label: "Day 5 (Forecast valid to 24th 08:30 IST)" },
-  6: { date: "24-May-2026", label: "Day 6 (Forecast valid to 25th 08:30 IST)" },
-  7: { date: "25-May-2026", label: "Day 7 (Forecast valid to 26th 08:30 IST)" }
-};
+  // Load dynamically calculated dates for may19 dataset
+  const savedDate = localStorage.getItem('custom_may19_forecast_date');
+  if (savedDate) {
+    updateDatesMapping(savedDate);
+  } else {
+    updateDatesMapping("19-May-2026");
+  }
+}
 
 // May 22, 2026 Weather Warnings Dataset (from screenshots)
 const may22Data = {
@@ -635,7 +694,8 @@ function setDataset(datasetName) {
     // May 22 Mode
     controls.style.display = 'none';
     title.innerText = "IMD Karnataka Weather Warnings";
-    subtitle.innerText = "Forecast valid from 0830 IST of 22 May 2026 · Issued by India Meteorological Department · Day 1";
+    const dateMay22 = localStorage.getItem('custom_may22_forecast_date') || "22-May-2026";
+    subtitle.innerText = `Forecast valid from 0830 IST of ${dateMay22} · Issued by India Meteorological Department · Day 1`;
     
     // Stop timeline playback
     if (state.isPlaying) togglePlayback();
@@ -647,7 +707,9 @@ function setDataset(datasetName) {
     // May 19 7-Day Timeline Mode
     controls.style.display = 'block';
     title.innerText = "IMD Karnataka Forecast Trend";
-    subtitle.innerText = "7-Day Forecast Cycle · Meteorological Forecast issued on 19-May-2026";
+    const dateMay19 = localStorage.getItem('custom_may19_forecast_date') || "19-May-2026";
+    updateDatesMapping(dateMay19);
+    subtitle.innerText = `7-Day Forecast Cycle · Meteorological Forecast issued on ${dateMay19}`;
     
     setDay(state.currentDay);
   }
@@ -685,17 +747,7 @@ function setupSearch() {
   const suggestionsBox = document.getElementById('search-suggestions');
   const clearBtn = document.getElementById('clear-search');
 
-  searchInput.addEventListener('input', (e) => {
-    const val = e.target.value.trim().toLowerCase();
-    
-    if (!val) {
-      suggestionsBox.style.display = 'none';
-      clearBtn.style.display = 'none';
-      return;
-    }
-    clearBtn.style.display = 'block';
-
-    // Filter districts (include Vijayanagara)
+  function showSuggestions(val) {
     const allDistricts = [...state.districtsList];
     if (!allDistricts.some(d => d.name === "VIJAYANAGARA")) {
       allDistricts.push({
@@ -706,10 +758,16 @@ function setupSearch() {
       });
     }
 
-    const matches = allDistricts.filter(d => 
-      d.cleanName.toLowerCase().includes(val) || 
-      d.name.toLowerCase().includes(val)
-    );
+    // Sort allDistricts alphabetically by cleanName
+    allDistricts.sort((a, b) => a.cleanName.localeCompare(b.cleanName));
+
+    let matches = allDistricts;
+    if (val) {
+      matches = allDistricts.filter(d => 
+        d.cleanName.toLowerCase().includes(val) || 
+        d.name.toLowerCase().includes(val)
+      );
+    }
 
     if (matches.length > 0) {
       suggestionsBox.innerHTML = '';
@@ -732,7 +790,8 @@ function setupSearch() {
             
             searchInput.value = match.cleanName;
             suggestionsBox.style.display = 'none';
-            selectDistrict(feature, targetLayer);
+            clearBtn.style.display = 'block';
+            selectDistrict(feature, targetLayer, match.name);
           }
         });
         suggestionsBox.appendChild(div);
@@ -742,6 +801,22 @@ function setupSearch() {
       suggestionsBox.innerHTML = '<div class="suggestion-item" style="color:var(--text-tertiary);cursor:default;">No matches found</div>';
       suggestionsBox.style.display = 'block';
     }
+  }
+
+  searchInput.addEventListener('input', (e) => {
+    const val = e.target.value.trim().toLowerCase();
+    clearBtn.style.display = val ? 'block' : 'none';
+    showSuggestions(val);
+  });
+
+  searchInput.addEventListener('focus', () => {
+    const val = searchInput.value.trim().toLowerCase();
+    showSuggestions(val);
+  });
+
+  searchInput.addEventListener('click', () => {
+    const val = searchInput.value.trim().toLowerCase();
+    showSuggestions(val);
   });
 
   clearBtn.addEventListener('click', () => {
@@ -752,7 +827,7 @@ function setupSearch() {
   });
 
   document.addEventListener('click', (e) => {
-    if (e.target !== searchInput && e.target !== suggestionsBox) {
+    if (e.target !== searchInput && e.target !== suggestionsBox && !suggestionsBox.contains(e.target)) {
       suggestionsBox.style.display = 'none';
     }
   });

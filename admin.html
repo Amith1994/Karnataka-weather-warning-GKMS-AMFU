@@ -442,6 +442,12 @@
             </select>
           </div>
 
+          <!-- Forecast Start Date Input -->
+          <div class="form-group" style="margin-bottom:0; min-width: 150px;">
+            <label for="forecast-date-input"><i class="fa-solid fa-calendar-days"></i> Forecast Start Date:</label>
+            <input type="text" id="forecast-date-input" value="19-May-2026" style="padding: 0.35rem 0.5rem; font-size: 0.75rem;">
+          </div>
+
           <!-- PDF file upload auto-fill -->
           <div class="form-group" style="margin-bottom:0; min-width: 250px;">
             <label for="pdf-upload"><i class="fa-solid fa-file-pdf"></i> Upload PDF to Auto-Fill:</label>
@@ -569,6 +575,14 @@
         const localMay19 = localStorage.getItem('custom_may19_data');
         currentMay19 = localMay19 ? JSON.parse(localMay19) : JSON.parse(JSON.stringify(defaultMay19));
 
+        // Populate initial date
+        const initialDbType = document.getElementById('editor-dataset-select').value;
+        if (initialDbType === 'may22') {
+          document.getElementById('forecast-date-input').value = localStorage.getItem('custom_may22_forecast_date') || "22-May-2026";
+        } else {
+          document.getElementById('forecast-date-input').value = localStorage.getItem('custom_may19_forecast_date') || "19-May-2026";
+        }
+
         // Build UI rows
         renderEditor();
 
@@ -637,10 +651,13 @@
     // Toggle dashboard options based on dataset dropdown
     document.getElementById('editor-dataset-select').addEventListener('change', (e) => {
       const dayGroup = document.getElementById('editor-day-group');
-      if (e.target.value === 'may19') {
+      const dbType = e.target.value;
+      if (dbType === 'may19') {
         dayGroup.style.display = 'block';
+        document.getElementById('forecast-date-input').value = localStorage.getItem('custom_may19_forecast_date') || "19-May-2026";
       } else {
         dayGroup.style.display = 'none';
+        document.getElementById('forecast-date-input').value = localStorage.getItem('custom_may22_forecast_date') || "22-May-2026";
       }
       renderEditor();
     });
@@ -651,6 +668,7 @@
     document.getElementById('save-btn').addEventListener('click', () => {
       const dbType = document.getElementById('editor-dataset-select').value;
       const dayVal = document.getElementById('editor-day-select').value;
+      const forecastDate = document.getElementById('forecast-date-input').value.trim();
       
       const intensities = document.querySelectorAll('.row-intensity');
       const warnings = document.querySelectorAll('.row-warning');
@@ -696,6 +714,7 @@
 
         // Write to storage
         localStorage.setItem('custom_may22_data', JSON.stringify(currentMay22));
+        localStorage.setItem('custom_may22_forecast_date', forecastDate);
       } else {
         // Collect May 19 Day-by-Day Forecast
         intensities.forEach((el, index) => {
@@ -715,6 +734,7 @@
 
         // Write to storage
         localStorage.setItem('custom_may19_data', JSON.stringify(currentMay19));
+        localStorage.setItem('custom_may19_forecast_date', forecastDate);
       }
 
       showToast("Data warnings updated successfully!");
@@ -724,9 +744,18 @@
     document.getElementById('reset-btn').addEventListener('click', () => {
       localStorage.removeItem('custom_may22_data');
       localStorage.removeItem('custom_may19_data');
+      localStorage.removeItem('custom_may22_forecast_date');
+      localStorage.removeItem('custom_may19_forecast_date');
       
       currentMay22 = JSON.parse(JSON.stringify(defaultMay22));
       currentMay19 = JSON.parse(JSON.stringify(defaultMay19));
+      
+      const dbType = document.getElementById('editor-dataset-select').value;
+      if (dbType === 'may22') {
+        document.getElementById('forecast-date-input').value = "22-May-2026";
+      } else {
+        document.getElementById('forecast-date-input').value = "19-May-2026";
+      }
       
       renderEditor();
       showToast("Database restored to defaults.");
@@ -813,6 +842,12 @@
           // Parse the extracted text for district warnings
           const parsedForecast = parseExtractedPDFText(fullText);
           
+          // Extract and display the date
+          const extractedDate = extractForecastDate(fullText);
+          if (extractedDate) {
+            document.getElementById('forecast-date-input').value = standardizeDateStr(extractedDate);
+          }
+          
           // Apply parsed values to in-memory datasets
           const dbType = document.getElementById('editor-dataset-select').value;
           
@@ -878,6 +913,44 @@
       reader.readAsArrayBuffer(file);
     });
 
+    // Helper functions for date extraction & standardisation
+    function extractForecastDate(text) {
+      const match = text.match(/ISSUED AT[\s\S]*?OF\s+([0-9]{1,2}[\/\-\.][A-Za-z0-9]{2,9}[\/\-\.][0-9]{2,4})/i);
+      if (match) {
+        return match[1].trim();
+      }
+      const fallbackMatch = text.match(/\b([0-9]{1,2}[\/\-\.][A-Za-z]{3,9}[\/\-\.][0-9]{2,4})\b/i);
+      if (fallbackMatch) {
+        return fallbackMatch[1].trim();
+      }
+      return null;
+    }
+
+    function standardizeDateStr(dateStr) {
+      if (!dateStr) return "";
+      const cleanStr = dateStr.replace(/[\/\.]/g, "-");
+      const parts = cleanStr.split("-");
+      if (parts.length < 3) return dateStr;
+      
+      let day = parseInt(parts[0], 10);
+      let monthStr = parts[1];
+      let year = parseInt(parts[2], 10);
+      if (year < 100) year += 2000;
+      
+      let month = monthStr;
+      if (isNaN(monthStr)) {
+        month = monthStr.charAt(0).toUpperCase() + monthStr.substring(1).toLowerCase();
+      } else {
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const mIdx = parseInt(monthStr, 10) - 1;
+        if (mIdx >= 0 && mIdx < 12) {
+          month = months[mIdx];
+        }
+      }
+      
+      return `${String(day).padStart(2, '0')}-${month}-${year}`;
+    }
+
     // JavaScript parser for IMD Forecast text content
     function parseExtractedPDFText(text) {
       const parsedData = {};
@@ -903,11 +976,21 @@
           // Split values by space
           const tokens = valuesStr.split(" ").filter(t => t.length > 0);
           
-          // Find corresponding probability line (first line containing 'PROBABILITY' starting from intensityLineIdx + 1)
+          // Find corresponding probability line (first line containing 'PROBAB' starting from intensityLineIdx + 1)
           let probLineStr = "";
+          let probMatchWord = "PROBABILITY";
           for (let i = intensityLineIdx + 1; i < lines.length; i++) {
-            if (lines[i].includes("PROBABILITY")) {
+            if (lines[i].includes("PROBABIL")) {
               probLineStr = lines[i];
+              probMatchWord = "PROBABIL";
+              break;
+            } else if (lines[i].includes("PROBABL")) {
+              probLineStr = lines[i];
+              probMatchWord = "PROBABL";
+              break;
+            } else if (lines[i].includes("PROBAB")) {
+              probLineStr = lines[i];
+              probMatchWord = "PROBAB";
               break;
             }
           }
@@ -915,8 +998,8 @@
           // Parse probability tokens
           let probValues = [];
           if (probLineStr) {
-            const probPartIdx = probLineStr.indexOf("PROBABILITY");
-            const probStr = probLineStr.substring(probPartIdx + "PROBABILITY".length).trim();
+            const probPartIdx = probLineStr.indexOf(probMatchWord);
+            const probStr = probLineStr.substring(probPartIdx + probMatchWord.length).trim();
             
             // Tokenize probability string
             const pTokens = probStr.split(" ").filter(t => t.length > 0);
