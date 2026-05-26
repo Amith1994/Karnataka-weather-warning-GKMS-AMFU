@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karnataka District Weather Warning Dashboard</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- FontAwesome for Premium Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="main-wrapper">
+    
+    <!-- Top Official Banner -->
+    <header class="official-banner">
+      <div class="banner-logo left-logo">
+        <img src="imd_logo.png" alt="IMD Logo">
+      </div>
+      <div class="banner-text">
+        <h2>India Meteorological Department, New Delhi, India</h2>
+        <h1>Keladi Shivappa Nayaka University of Agricultural and Horticultural Sciences</h1>
+        <h3>Gramin Krishi Mausam Sewa (GKMS) & AgroMet Field Units (AMFU)</h3>
+        <p class="stations">Hiriyur &bull; Navile &bull; Brahmavar</p>
+        <p class="tagline">Delivering Weather-Based Agro Advisory Services For Climate-Resilient Farming</p>
+      </div>
+      <div class="banner-logo right-logo">
+        <img src="ksnuahs_logo.png" alt="KSNUAHS Logo">
+      </div>
+      <!-- Admin Portal Link -->
+      <a href="admin.html" class="admin-link-btn" title="Admin Portal Login">
+        <i class="fa-solid fa-user-gear"></i> Admin Login
+      </a>
+    </header>
+
+    <div class="app-container">
+      
+      <!-- Left Sidebar: Controls & Selected District Details -->
+      <aside class="sidebar">
+        <header class="sidebar-header">
+          <div class="logo">
+            <i class="fa-solid fa-cloud-showers-water logo-icon"></i>
+            <div>
+              <h1>Met-Insight</h1>
+              <span class="logo-sub">Karnataka Weather Watch</span>
+            </div>
+          </div>
+          
+          <!-- View / Dataset Selector -->
+          <div class="view-selector-container">
+            <label for="dataset-select"><i class="fa-solid fa-database"></i> Forecast Source:</label>
+            <select id="dataset-select" class="dataset-dropdown">
+              <option value="may22" selected>22-May-2026 (Detailed Warnings)</option>
+              <option value="may19">19-May-2026 (7-Day Forecast)</option>
+            </select>
+          </div>
+        </header>
+
+        <!-- Search Section -->
+        <section class="search-section">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="district-search" placeholder="Search district..." autocomplete="off">
+            <button id="clear-search" class="clear-btn" style="display: none;">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div id="search-suggestions" class="search-suggestions"></div>
+        </section>
+
+        <!-- Selected District Details -->
+        <section class="detail-section">
+          <div class="detail-header">
+            <h2 class="section-title">District Details</h2>
+            <span class="detail-hint" id="detail-hint">Click on a district to view details</span>
+          </div>
+          
+          <div id="district-detail-card" class="district-detail-card" style="display: none;">
+            <div class="district-info">
+              <h3 id="detail-name">District Name</h3>
+              <span id="detail-region" class="region-badge">Met Sub-Division</span>
+            </div>
+            
+            <div class="active-warning-box" id="detail-active-box">
+              <div class="warning-header">
+                <span class="warning-title">Active Warning</span>
+                <span id="detail-warning-badge" class="warning-badge">LEVEL</span>
+              </div>
+              <div class="warning-content">
+                <div class="warning-item">
+                  <i class="fa-solid fa-cloud-rain warning-icon"></i>
+                  <div>
+                    <span class="warning-item-lbl">Rain Intensity</span>
+                    <span class="warning-item-val" id="detail-intensity">L/M (Light to Moderate)</span>
+                  </div>
+                </div>
+                <div class="warning-item">
+                  <i class="fa-solid fa-triangle-exclamation warning-icon"></i>
+                  <div>
+                    <span class="warning-item-lbl">Warning / Hazards</span>
+                    <span class="warning-item-val" id="detail-hazard">TSH/GW (Thunderstorm & Gusty Wind)</span>
+                  </div>
+                </div>
+                <div class="warning-item">
+                  <i class="fa-solid fa-chart-line warning-icon"></i>
+                  <div>
+                    <span class="warning-item-lbl">Probability</span>
+                    <span class="warning-item-val" id="detail-probability">VERY LIKELY (51-75%)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 7-Day Trend (Only visible in 7-Day Mode) -->
+            <div class="micro-timeline-container" id="detail-trend-container">
+              <h4>7-Day Forecast Trend</h4>
+              <div class="micro-timeline" id="micro-timeline">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <!-- Center: Interactive Map Container -->
+      <main class="map-view-container">
+        <div id="map"></div>
+
+        <!-- Floating Bottom Controls Panel -->
+        <div class="floating-controls-container" id="map-controls-panel">
+          <!-- Date Timeline Controller -->
+          <div class="timeline-bar">
+            <div class="playback-controls">
+              <button id="play-pause-btn" class="playback-btn" title="Play animation">
+                <i class="fa-solid fa-play"></i>
+              </button>
+            </div>
+            <div class="slider-wrapper">
+              <div class="slider-labels">
+                <span class="slider-date-lbl" id="active-date-display">19-May-2026</span>
+                <span class="slider-day-lbl" id="active-day-display">Day 1 Forecast</span>
+              </div>
+              <input type="range" id="day-slider" min="1" max="7" value="1" step="1">
+              <div class="slider-ticks">
+                <span class="tick active" data-day="1">Day 1</span>
+                <span class="tick" data-day="2">Day 2</span>
+                <span class="tick" data-day="3">Day 3</span>
+                <span class="tick" data-day="4">Day 4</span>
+                <span class="tick" data-day="5">Day 5</span>
+                <span class="tick" data-day="6">Day 6</span>
+                <span class="tick" data-day="7">Day 7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right: Screenshot-matching Dynamic Tables & Stats Dashboard -->
+      <section class="alerts-dashboard">
+        <header class="dashboard-header">
+          <div class="imd-badge">IMD</div>
+          <div class="header-text-container">
+            <h2 id="dashboard-title">Karnataka Weather Warnings</h2>
+            <p id="dashboard-subtitle" class="dashboard-subtitle">Forecast valid from 0830 IST of 22 May 2026 · Issued by India Meteorological Department · Day 1</p>
+          </div>
+          
+          <!-- Actions inside dashboard -->
+          <div class="dashboard-actions">
+            <button id="export-geojson-btn" class="action-btn-sm" title="Export Current Data as GeoJSON">
+              <i class="fa-solid fa-file-code"></i> GeoJSON
+            </button>
+            <button id="export-image-btn" class="action-btn-sm" title="Export Map as Image">
+              <i class="fa-solid fa-image"></i> PNG Map
+            </button>
+          </div>
+        </header>
+
+        <!-- Row of Count Cards -->
+        <div class="summary-cards-row">
+          <div class="summary-card red-card">
+            <span class="summary-val" id="card-red-val">4</span>
+            <span class="summary-lbl" id="card-red-lbl">Red · Heavy + Hail</span>
+          </div>
+          <div class="summary-card orange-card">
+            <span class="summary-val" id="card-orange-val">6</span>
+            <span class="summary-lbl" id="card-orange-lbl">Orange · Heavy Rain</span>
+          </div>
+          <div class="summary-card yellow-card">
+            <span class="summary-val" id="card-yellow-val">14</span>
+            <span class="summary-lbl" id="card-yellow-lbl">Yellow · Moderate</span>
+          </div>
+          <div class="summary-card grey-card">
+            <span class="summary-val" id="card-grey-val">3</span>
+            <span class="summary-lbl" id="card-grey-lbl">Dry · No Warning</span>
+          </div>
+        </div>
+
+        <!-- Color Legend Bullet List -->
+        <div class="bullet-legend">
+          <div class="bullet-item"><span class="bullet red"></span> <strong>Red</strong> — Heavy rain + Hail + Gusty wind 50-60 kmph</div>
+          <div class="bullet-item"><span class="bullet orange"></span> <strong>Orange</strong> — Heavy rain + Gusty wind 50-60 kmph</div>
+          <div class="bullet-item"><span class="bullet yellow"></span> <strong>Yellow</strong> — Light/Moderate rain + Thunderstorm/Gusty wind</div>
+          <div class="bullet-item"><span class="bullet green-yellow"></span> <strong>Green-Yellow</strong> — Light rain + Thunderstorm</div>
+          <div class="bullet-item"><span class="bullet blue"></span> <strong>Blue</strong> — Coastal thunderstorm (L/M)</div>
+          <div class="bullet-item"><span class="bullet grey"></span> <strong>Grey</strong> — Dry / No warning</div>
+        </div>
+
+        <!-- Regional Columns Grid -->
+        <div class="regional-grid-container">
+          
+          <!-- Column 1: Coastal Karnataka -->
+          <div class="regional-column coastal-col">
+            <div class="col-header">
+              <i class="fa-solid fa-water"></i> COASTAL KARNATAKA
+            </div>
+            <div class="col-rows" id="coastal-rows-container">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+
+          <!-- Column 2: North Interior Karnataka -->
+          <div class="regional-column north-col">
+            <div class="col-header">
+              <i class="fa-solid fa-mountain"></i> NORTH INTERIOR KARNATAKA
+            </div>
+            <div class="col-rows" id="north-rows-container">
+              <!-- Loaded dynamically -->
+            </div>
+            <div class="scroll-indicator" id="north-scroll-indicator">
+              <i class="fa-solid fa-arrow-down"></i>
+            </div>
+          </div>
+
+          <!-- Column 3: South Interior Karnataka -->
+          <div class="regional-column south-col">
+            <div class="col-header">
+              <i class="fa-solid fa-leaf"></i> SOUTH INTERIOR KARNATAKA
+            </div>
+            <div class="col-rows" id="south-rows-container">
+              <!-- Loaded dynamically -->
+            </div>
+            <div class="scroll-indicator" id="south-scroll-indicator">
+              <i class="fa-solid fa-arrow-down"></i>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- html2canvas for Screenshot Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibSRLKCqQrSqIMJ5YiL6ES6AH8M5MCOg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  
+  <!-- Core Logic script -->
+  <script src="app.js"></script>
+</body>
+</html>

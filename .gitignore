@@ -1,0 +1,21 @@
+# IDE and Editor Files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS Files
+Thumbs.db
+EHthumbs.db
+Desktop.ini
+
+# Logs and databases
+*.log
+*.sqlite
+
+# Local custom testing cache
+node_modules/
+package-lock.json

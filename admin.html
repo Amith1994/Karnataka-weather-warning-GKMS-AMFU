@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - weather warnings</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --font-title: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --bg-primary: #080a10;
+      --bg-card: rgba(18, 22, 33, 0.85);
+      --bg-input: rgba(255, 255, 255, 0.03);
+      --border-light: rgba(255, 255, 255, 0.08);
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-glow: rgba(59, 130, 246, 0.35);
+      
+      --color-red: #d32f2f;
+      --color-orange: #e65100;
+      --color-yellow: #fbc02d;
+      --color-green: #4caf50;
+      --color-blue: #1976d2;
+      --color-grey: #90a4ae;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Top Official Banner */
+    .official-banner {
+      background: linear-gradient(135deg, #090c15 0%, #121829 100%);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1.5rem;
+      gap: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .banner-logo img {
+      height: 50px;
+      object-fit: contain;
+    }
+    .banner-text {
+      text-align: center;
+      flex-grow: 1;
+    }
+    .banner-text h2 {
+      font-family: var(--font-title);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-bottom: 0.1rem;
+    }
+    .banner-text h1 {
+      font-family: var(--font-title);
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.1rem;
+    }
+    .banner-text p {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+    }
+    .home-link-btn {
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.4rem 0.75rem;
+      border-radius: 20px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+    .home-link-btn:hover {
+      background-color: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    /* Outer Wrapper */
+    .portal-container {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      width: 100%;
+    }
+
+    /* Login Card Layout */
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      animation: fadeInUp 0.3s ease;
+    }
+    .card-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .card-header i {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      text-shadow: 0 0 15px var(--accent-glow);
+    }
+    .card-header h2 {
+      font-family: var(--font-title);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .card-header p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+    }
+    .submit-btn:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+    .error-msg {
+      background-color: rgba(211, 47, 47, 0.15);
+      border: 1px solid rgba(211, 47, 47, 0.3);
+      color: #ff8a80;
+      padding: 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    /* Editor Dashboard Layout (Wider Card) */
+    .editor-card {
+      width: 100%;
+      max-width: 1100px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      display: none; /* Shown after auth */
+      flex-direction: column;
+      gap: 1.5rem;
+      animation: fadeInUp 0.4s ease;
+    }
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-light);
+      padding-bottom: 1rem;
+    }
+    .editor-title-desc h2 {
+      font-family: var(--font-title);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .editor-title-desc p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.015);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      padding: 1rem;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .editor-selects {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .editor-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .action-btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+    .btn-save { background-color: var(--accent); border: none; color: #fff; }
+    .btn-save:hover { background-color: var(--accent-hover); }
+    
+    .btn-reset { background-color: rgba(211, 47, 47, 0.15); border: 1px solid rgba(211, 47, 47, 0.3); color: #ff8a80; }
+    .btn-reset:hover { background-color: rgba(211, 47, 47, 0.25); }
+
+    .btn-logout { background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-light); color: var(--text-secondary); }
+    .btn-logout:hover { background-color: rgba(255,255,255,0.1); color: #fff; }
+
+    /* Districts Form Grid */
+    .districts-grid-wrapper {
+      max-height: 50vh;
+      overflow-y: auto;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    .districts-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .districts-table th, .districts-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 0.85rem;
+    }
+    .districts-table th {
+      background-color: rgba(255, 255, 255, 0.02);
+      font-family: var(--font-title);
+      font-weight: 600;
+      color: var(--text-secondary);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .districts-table tr:hover {
+      background-color: rgba(255, 255, 255, 0.01);
+    }
+    .district-name-cell {
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 6px;
+    }
+    .row-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    .status-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    /* Custom Toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 9999;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Top Banner -->
+  <header class="official-banner">
+    <div class="banner-logo">
+      <img src="imd_logo.png" alt="IMD Logo">
+    </div>
+    <div class="banner-text">
+      <h2>India Meteorological Department, New Delhi, India</h2>
+      <h1>Keladi Shivappa Nayaka University of Agricultural and Horticultural Sciences</h1>
+      <p>Gramin Krishi Mausam Sewa (GKMS) & AgroMet Field Units (AMFU)</p>
+    </div>
+    <div class="banner-logo">
+      <img src="ksnuahs_logo.png" alt="KSNUAHS Logo">
+    </div>
+    <a href="index.html" class="home-link-btn">
+      <i class="fa-solid fa-arrow-left"></i> View Live Map
+    </a>
+  </header>
+
+  <div class="portal-container">
+    
+    <!-- AUTH PANEL -->
+    <div class="login-card" id="login-panel">
+      <div class="card-header">
+        <i class="fa-solid fa-shield-halved"></i>
+        <h2>Admin Authentication</h2>
+        <p>Log in to customize weather warning datasets</p>
+      </div>
+      <div class="error-msg" id="auth-error">Invalid Username or Password. Please try again.</div>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="submit-btn">Login to Portal</button>
+      </form>
+    </div>
+
+    <!-- DATA EDITOR DASHBOARD -->
+    <div class="editor-card" id="editor-panel">
+      <div class="editor-header">
+        <div class="editor-title-desc">
+          <h2>Weather Alerts Database Editor</h2>
+          <p>Customize district warnings and save updates to cache memory</p>
+        </div>
+        <button class="action-btn btn-logout" id="logout-btn">
+          <i class="fa-solid fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+
+      <div class="controls-row">
+        <div class="editor-selects">
+          <div class="form-group" style="margin-bottom:0; min-width: 250px;">
+            <label for="editor-dataset-select">Select Target Source:</label>
+            <select id="editor-dataset-select">
+              <option value="may22">22-May-2026 (Detailed Warnings)</option>
+              <option value="may19">19-May-2026 Forecast Timeline</option>
+            </select>
+          </div>
+          
+          <div class="form-group" id="editor-day-group" style="margin-bottom:0; min-width: 150px; display: none;">
+            <label for="editor-day-select">Select Timeline Day:</label>
+            <select id="editor-day-select">
+              <option value="1">Day 1 (19-May)</option>
+              <option value="2">Day 2 (20-May)</option>
+              <option value="3">Day 3 (21-May)</option>
+              <option value="4">Day 4 (22-May)</option>
+              <option value="5">Day 5 (23-May)</option>
+              <option value="6">Day 6 (24-May)</option>
+              <option value="7">Day 7 (25-May)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="editor-actions">
+          <button class="action-btn btn-reset" id="reset-btn">
+            <i class="fa-solid fa-rotate-left"></i> Restore Defaults
+          </button>
+          <button class="action-btn btn-save" id="save-btn">
+            <i class="fa-solid fa-floppy-disk"></i> Save Warnings
+          </button>
+        </div>
+      </div>
+
+      <!-- Districts Editing Form Table -->
+      <div class="districts-grid-wrapper">
+        <table class="districts-table">
+          <thead>
+            <tr>
+              <th>District Name</th>
+              <th>Rainfall Intensity</th>
+              <th>Warning Hazard Text</th>
+              <th>Probability Option</th>
+            </tr>
+          </thead>
+          <tbody id="districts-editor-rows">
+            <!-- Loaded dynamically in JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast-bar">
+    <i class="fa-solid fa-circle-check" style="color:var(--accent)"></i>
+    <span id="toast-msg">Changes saved successfully!</span>
+  </div>
+
+  <!-- core Admin script -->
+  <script>
+    // Hardcoded credentials
+    const AUTH = { user: "admin", pass: "admin123" };
+    
+    // Original Default Datasets (Loaded as fallback)
+    let defaultMay22 = {};
+    let defaultMay19 = {};
+
+    // Loaded states
+    let currentMay22 = null;
+    let currentMay19 = null;
+
+    // Full 31 Districts list
+    const districtNames = [
+      "BAGALKOTE", "BALLARI", "BELAGAVI", "BENGALURU RURAL", "BENGALURU URBAN", "BIDAR", "CHAMARAJANAGAR", "CHIKKABALLAPURA", "CHIKKAMAGALURU", "CHITRADURGA", "DAKSHINA KANNADA", "DAVANGERE", "DHARWAD", "GADAG", "HASSAN", "HAVERI", "KALABURGI", "KODAGU", "KOLAR", "KOPPAL", "MANDYA", "MYSURU", "RAICHUR", "RAMANAGARA", "SHIVAMOGGA", "TUMAKURU", "UDUPI", "UTTARA KANNADA", "VIJAYANAGARA", "VIJAYAPURA", "YADGIR"
+    ];
+
+    // Helper to format names
+    function cleanName(n) {
+      return n.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    }
+
+    // Load initial defaults and local storage overrides
+    async function loadData() {
+      // 1. Fetch default GeoJSON boundaries to populate May 19 defaults
+      try {
+        const response = await fetch('karnataka_districts_with_forecast.geojson');
+        const geojson = await response.json();
+        
+        // Extract default May 19 warnings from GeoJSON properties
+        geojson.features.forEach(f => {
+          const matched = f.properties.matched_name;
+          if (matched) {
+            defaultMay19[matched] = f.properties.forecast;
+            
+            // Duplicate Ballari for Vijayanagara if needed
+            if (matched === "BALLARI" && f.properties.vijayanagara_forecast) {
+              defaultMay19["VIJAYANAGARA"] = f.properties.vijayanagara_forecast;
+            }
+          }
+        });
+
+        // Initialize default May 22 alerts (matches app.js)
+        defaultMay22 = {
+          "DAKSHINA KANNADA": { intensity: "L/M", warning: "Coastal TSH", probability: "VERY LIKELY", code: "L/M TSH", level: "blue" },
+          "UDUPI": { intensity: "L/M", warning: "Coastal TSH", probability: "VERY LIKELY", code: "L/M TSH", level: "blue" },
+          "UTTARA KANNADA": { intensity: "L/M", warning: "Coastal TSH", probability: "VERY LIKELY", code: "L/M TSH", level: "blue" },
+          "BAGALKOTE": { intensity: "Heavy Rain + Hail", warning: "GR + GW 50-60 kmph", probability: "VERY LIKELY", code: "H + GR + GW", level: "red" },
+          "BELAGAVI": { intensity: "Heavy Rain + Hail", warning: "GR + GW 50-60 kmph", probability: "VERY LIKELY", code: "H + GR + GW", level: "red" },
+          "BIDAR": { intensity: "Dry", warning: "NIL", probability: "NIL", code: "Dry", level: "grey" },
+          "DHARWAD": { intensity: "Heavy Rain + Hail", warning: "GR + GW 50-60 kmph", probability: "VERY LIKELY", code: "H + GR + GW", level: "red" },
+          "GADAG": { intensity: "Heavy Rain + Hail", warning: "GR + GW 50-60 kmph", probability: "VERY LIKELY", code: "H + GR + GW", level: "red" },
+          "HAVERI": { intensity: "L/M Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "L/M + GW", level: "yellow" },
+          "KALABURGI": { intensity: "Dry", warning: "NIL", probability: "NIL", code: "Dry", level: "grey" },
+          "KOPPAL": { intensity: "L/M Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "L/M + GW", level: "yellow" },
+          "RAICHUR": { intensity: "L/M Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "L/M + GW", level: "yellow" },
+          "VIJAYAPURA": { intensity: "L/M Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "L/M + GW", level: "yellow" },
+          "YADGIR": { intensity: "Dry", warning: "NIL", probability: "NIL", code: "Dry", level: "grey" },
+          "BALLARI": { intensity: "L/M Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "L/M + GW", level: "yellow" },
+          "VIJAYANAGARA": { intensity: "L/M Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "L/M + GW", level: "yellow" },
+          "BENGALURU RURAL": { intensity: "Heavy Rain", warning: "Gusty Winds 40-50 kmph", probability: "VERY LIKELY", code: "Heavy + GW", level: "orange" },
+          "BENGALURU URBAN": { intensity: "Heavy Rain", warning: "Gusty Winds 40-50 kmph", probability: "VERY LIKELY", code: "Heavy + GW", level: "orange" },
+          "CHAMARAJANAGAR": { intensity: "L/M Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "L/M + GW", level: "yellow" },
+          "CHIKKABALLAPURA": { intensity: "Heavy Rain", warning: "Gusty Winds 40-50 kmph", probability: "VERY LIKELY", code: "Heavy + GW", level: "orange" },
+          "CHIKKAMAGALURU": { intensity: "Light Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "Light + GW", level: "green-yellow" },
+          "CHITRADURGA": { intensity: "Light Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "Light + GW", level: "green-yellow" },
+          "DAVANGERE": { intensity: "L/M Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "L/M + GW", level: "yellow" },
+          "HASSAN": { intensity: "Heavy Rain", warning: "Gusty Winds 40-50 kmph", probability: "VERY LIKELY", code: "Heavy + GW", level: "orange" },
+          "KODAGU": { intensity: "Light Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "Light + GW", level: "green-yellow" },
+          "KOLAR": { intensity: "Heavy Rain", warning: "Gusty Winds 40-50 kmph", probability: "VERY LIKELY", code: "Heavy + GW", level: "orange" },
+          "MANDYA": { intensity: "Light Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "Light + GW", level: "green-yellow" },
+          "MYSURU": { intensity: "Heavy Rain", warning: "Gusty Winds 40-50 kmph", probability: "VERY LIKELY", code: "Heavy + GW", level: "orange" },
+          "RAMANAGARA": { intensity: "Light Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "Light + GW", level: "green-yellow" },
+          "SHIVAMOGGA": { intensity: "Light Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "Light + GW", level: "green-yellow" },
+          "TUMAKURU": { intensity: "L/M Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "L/M + GW", level: "yellow" }
+        };
+
+        // Load custom warnings from local storage if available
+        const localMay22 = localStorage.getItem('custom_may22_data');
+        currentMay22 = localMay22 ? JSON.parse(localMay22) : JSON.parse(JSON.stringify(defaultMay22));
+
+        const localMay19 = localStorage.getItem('custom_may19_data');
+        currentMay19 = localMay19 ? JSON.parse(localMay19) : JSON.parse(JSON.stringify(defaultMay19));
+
+        // Build UI rows
+        renderEditor();
+
+      } catch (err) {
+        console.error("Error initializing defaults:", err);
+      }
+    }
+
+    // Render districts list in form table
+    function renderEditor() {
+      const dbType = document.getElementById('editor-dataset-select').value;
+      const dayVal = document.getElementById('editor-day-select').value;
+      const tbody = document.getElementById('districts-editor-rows');
+      tbody.innerHTML = '';
+
+      districtNames.forEach(matchedKey => {
+        let activeData = {};
+        
+        if (dbType === 'may22') {
+          activeData = currentMay22[matchedKey] || { intensity: "Dry", warning: "NIL", probability: "NIL" };
+        } else {
+          // May 19 forecast index is segmented by day1 - day7
+          const forecast = currentMay19[matchedKey] || {};
+          activeData = forecast[`day${dayVal}`] || { intensity: "DRY", warning: "NIL", probability: "NIL" };
+        }
+
+        const tr = document.createElement('tr');
+        
+        // Render rain intensity options
+        const intensityOptions = ["DRY", "LIGHT", "L/M", "HEAVY", "H(R+)", "VH(R++)", "ExH(R+++)", "VL"];
+        let intensityHTML = `<select class="row-intensity" data-district="${matchedKey}">`;
+        intensityOptions.forEach(opt => {
+          const selected = (activeData.intensity || "").toUpperCase() === opt.toUpperCase() ? 'selected' : '';
+          intensityHTML += `<option value="${opt}" ${selected}>${opt}</option>`;
+        });
+        intensityHTML += `</select>`;
+
+        // Render probability options
+        const probOptions = ["NIL", "LIKELY", "VERY LIKELY", "MOST LIKELY"];
+        let probHTML = `<select class="row-probability" data-district="${matchedKey}">`;
+        probOptions.forEach(opt => {
+          const selected = (activeData.probability || "").toUpperCase() === opt.toUpperCase() ? 'selected' : '';
+          probHTML += `<option value="${opt}" ${selected}>${opt}</option>`;
+        });
+        probHTML += `</select>`;
+
+        // Text input for warning hazard
+        const hazardVal = activeData.warning || 'NIL';
+
+        tr.innerHTML = `
+          <td>
+            <div class="district-name-cell">
+              ${cleanName(matchedKey)}
+            </div>
+          </td>
+          <td>${intensityHTML}</td>
+          <td>
+            <input type="text" class="row-warning" data-district="${matchedKey}" value="${hazardVal}">
+          </td>
+          <td>${probHTML}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Toggle dashboard options based on dataset dropdown
+    document.getElementById('editor-dataset-select').addEventListener('change', (e) => {
+      const dayGroup = document.getElementById('editor-day-group');
+      if (e.target.value === 'may19') {
+        dayGroup.style.display = 'block';
+      } else {
+        dayGroup.style.display = 'none';
+      }
+      renderEditor();
+    });
+
+    document.getElementById('editor-day-select').addEventListener('change', renderEditor);
+
+    // Save warning inputs to Cache
+    document.getElementById('save-btn').addEventListener('click', () => {
+      const dbType = document.getElementById('editor-dataset-select').value;
+      const dayVal = document.getElementById('editor-day-select').value;
+      
+      const intensities = document.querySelectorAll('.row-intensity');
+      const warnings = document.querySelectorAll('.row-warning');
+      const probabilities = document.querySelectorAll('.row-probability');
+
+      if (dbType === 'may22') {
+        // Collect May 22 Alerts
+        intensities.forEach((el, index) => {
+          const district = el.getAttribute('data-district');
+          const intensity = el.value;
+          const warning = warnings[index].value;
+          const probability = probabilities[index].value;
+
+          // Determine color level and badge code from intensity & warning
+          let level = "grey";
+          let code = "Dry";
+          
+          if (intensity === 'HEAVY') { level = "orange"; code = "Heavy + GW"; }
+          else if (intensity === 'LIGHT') { level = "green-yellow"; code = "Light + GW"; }
+          else if (intensity === 'H') { level = "red"; code = "H + GR + GW"; }
+          else if (intensity === 'L/M') {
+            const coastal = ["DAKSHINA KANNADA", "UDUPI", "UTTARA KANNADA"];
+            if (coastal.includes(district)) {
+              level = "blue";
+              code = "L/M TSH";
+            } else {
+              level = "yellow";
+              code = "L/M + GW";
+            }
+          }
+
+          currentMay22[district] = {
+            intensity: intensity,
+            warning: warning,
+            probability: probability,
+            code: code,
+            level: level
+          };
+        });
+
+        // Write to storage
+        localStorage.setItem('custom_may22_data', JSON.stringify(currentMay22));
+      } else {
+        // Collect May 19 Day-by-Day Forecast
+        intensities.forEach((el, index) => {
+          const district = el.getAttribute('data-district');
+          const intensity = el.value;
+          const warning = warnings[index].value;
+          const probability = probabilities[index].value;
+
+          if (!currentMay19[district]) currentMay19[district] = {};
+          const dayKey = `day${dayVal}`;
+          currentMay19[district][dayKey] = {
+            intensity: intensity,
+            warning: warning,
+            probability: probability
+          };
+        });
+
+        // Write to storage
+        localStorage.setItem('custom_may19_data', JSON.stringify(currentMay19));
+      }
+
+      showToast("Data warnings updated successfully!");
+    });
+
+    // Reset database to defaults
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      localStorage.removeItem('custom_may22_data');
+      localStorage.removeItem('custom_may19_data');
+      
+      currentMay22 = JSON.parse(JSON.stringify(defaultMay22));
+      currentMay19 = JSON.parse(JSON.stringify(defaultMay19));
+      
+      renderEditor();
+      showToast("Database restored to defaults.");
+    });
+
+    // Handle Login Auth
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      
+      if (user === AUTH.user && pass === AUTH.pass) {
+        document.getElementById('login-panel').style.display = 'none';
+        document.getElementById('editor-panel').style.display = 'flex';
+        // Save auth state
+        sessionStorage.setItem('admin_auth', 'true');
+        showToast("Logged in successfully!");
+      } else {
+        const err = document.getElementById('auth-error');
+        err.style.display = 'block';
+        setTimeout(() => { err.style.display = 'none'; }, 4000);
+      }
+    });
+
+    // Handle Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      sessionStorage.removeItem('admin_auth');
+      document.getElementById('editor-panel').style.display = 'none';
+      document.getElementById('login-panel').style.display = 'block';
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      showToast("Logged out successfully.");
+    });
+
+    // Show Toast notifications
+    function showToast(msg) {
+      const toast = document.getElementById('toast-bar');
+      document.getElementById('toast-msg').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Check login state on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      if (sessionStorage.getItem('admin_auth') === 'true') {
+        document.getElementById('login-panel').style.display = 'none';
+        document.getElementById('editor-panel').style.display = 'flex';
+      }
+    });
+  </script>
+</body>
+</html>
