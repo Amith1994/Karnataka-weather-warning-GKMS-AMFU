@@ -106,6 +106,24 @@ function loadCustomDataFromStorage() {
   }
 }
 
+function updateDatasetDropdownLabels() {
+  const selectEl = document.getElementById('dataset-select');
+  if (!selectEl) return;
+  
+  const dateMay22 = localStorage.getItem('custom_may22_forecast_date') || "22-May-2026";
+  const dateMay19 = localStorage.getItem('custom_may19_forecast_date') || "19-May-2026";
+  
+  const optMay22 = selectEl.querySelector('option[value="may22"]');
+  if (optMay22) {
+    optMay22.innerText = `${dateMay22} (Detailed Warnings)`;
+  }
+  
+  const optMay19 = selectEl.querySelector('option[value="may19"]');
+  if (optMay19) {
+    optMay19.innerText = `${dateMay19} (7-Day Forecast)`;
+  }
+}
+
 async function loadCustomData() {
   try {
     const response = await fetch('forecast_data.json');
@@ -129,9 +147,11 @@ async function loadCustomData() {
     } else {
       loadCustomDataFromStorage();
     }
+    updateDatasetDropdownLabels();
   } catch (e) {
     console.error("Error loading forecast_data.json, falling back to LocalStorage:", e);
     loadCustomDataFromStorage();
+    updateDatasetDropdownLabels();
   }
 }
 
@@ -1020,7 +1040,7 @@ async function init() {
     setupEventListeners();
     
     // Set default dataset
-    setDataset('may22');
+    setDataset('may19');
     
   } catch (error) {
     console.error("Failed to load map data:", error);

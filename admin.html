@@ -572,12 +572,38 @@
           "TUMAKURU": { intensity: "L/M Rain", warning: "Gusty Winds 30-40 kmph", probability: "VERY LIKELY", code: "L/M + GW", level: "yellow" }
         };
 
-        // Load custom warnings from local storage if available
-        const localMay22 = localStorage.getItem('custom_may22_data');
-        currentMay22 = localMay22 ? JSON.parse(localMay22) : JSON.parse(JSON.stringify(defaultMay22));
+        // Try fetching from forecast_data.json first
+        try {
+          const res = await fetch('forecast_data.json');
+          if (res.ok) {
+            const data = await res.json();
+            currentMay22 = data.customMay22 || JSON.parse(JSON.stringify(defaultMay22));
+            currentMay19 = data.customMay19 || JSON.parse(JSON.stringify(defaultMay19));
+            
+            // Save to localStorage to keep it in sync
+            localStorage.setItem('custom_may22_data', JSON.stringify(currentMay22));
+            localStorage.setItem('custom_may19_data', JSON.stringify(currentMay19));
+            if (data.customMay22ForecastDate) {
+              localStorage.setItem('custom_may22_forecast_date', data.customMay22ForecastDate);
+            }
+            if (data.customMay19ForecastDate) {
+              localStorage.setItem('custom_may19_forecast_date', data.customMay19ForecastDate);
+            }
+          } else {
+            loadFromLocalStorage();
+          }
+        } catch (e) {
+          console.warn("Could not load forecast_data.json in admin, using localStorage:", e);
+          loadFromLocalStorage();
+        }
 
-        const localMay19 = localStorage.getItem('custom_may19_data');
-        currentMay19 = localMay19 ? JSON.parse(localMay19) : JSON.parse(JSON.stringify(defaultMay19));
+        function loadFromLocalStorage() {
+          const localMay22 = localStorage.getItem('custom_may22_data');
+          currentMay22 = localMay22 ? JSON.parse(localMay22) : JSON.parse(JSON.stringify(defaultMay22));
+
+          const localMay19 = localStorage.getItem('custom_may19_data');
+          currentMay19 = localMay19 ? JSON.parse(localMay19) : JSON.parse(JSON.stringify(defaultMay19));
+        }
 
         // Populate initial date
         const initialDbType = document.getElementById('editor-dataset-select').value;
@@ -718,10 +744,6 @@
             level: level
           };
         });
-
-        // Write to storage
-        localStorage.setItem('custom_may22_data', JSON.stringify(currentMay22));
-        localStorage.setItem('custom_may22_forecast_date', forecastDate);
       } else {
         // Collect May 19 Day-by-Day Forecast
         intensities.forEach((el, index) => {
@@ -738,11 +760,13 @@
             probability: probability
           };
         });
-
-        // Write to storage
-        localStorage.setItem('custom_may19_data', JSON.stringify(currentMay19));
-        localStorage.setItem('custom_may19_forecast_date', forecastDate);
       }
+
+      // Always save both datasets and the date to local storage
+      localStorage.setItem('custom_may22_data', JSON.stringify(currentMay22));
+      localStorage.setItem('custom_may22_forecast_date', forecastDate);
+      localStorage.setItem('custom_may19_data', JSON.stringify(currentMay19));
+      localStorage.setItem('custom_may19_forecast_date', forecastDate);
 
       // Automatically commit to GitHub if Token is present
       const ghToken = document.getElementById('github-token-input').value.trim();
@@ -753,8 +777,8 @@
         const forecastJSON = JSON.stringify({
           customMay19: currentMay19,
           customMay22: currentMay22,
-          customMay19ForecastDate: localStorage.getItem('custom_may19_forecast_date') || "19-May-2026",
-          customMay22ForecastDate: localStorage.getItem('custom_may22_forecast_date') || "22-May-2026"
+          customMay19ForecastDate: forecastDate,
+          customMay22ForecastDate: forecastDate
         }, null, 2);
 
         commitToGitHub(ghToken, forecastJSON);
@@ -869,58 +893,53 @@
             document.getElementById('forecast-date-input').value = standardizeDateStr(extractedDate);
           }
           
-          // Apply parsed values to in-memory datasets
-          const dbType = document.getElementById('editor-dataset-select').value;
-          
-          if (dbType === 'may22') {
-            // Apply to May 22 alerts
-            Object.keys(parsedForecast).forEach(dist => {
-              const info = parsedForecast[dist];
-              const d1 = info.day1 || { intensity: "DRY", warning: "NIL" };
-              
-              let level = "grey";
-              let code = "Dry";
-              let intensity = d1.intensity;
-              let warning = d1.warning;
+          // Apply parsed values to BOTH in-memory datasets simultaneously
+          Object.keys(parsedForecast).forEach(dist => {
+            const info = parsedForecast[dist];
+            const d1 = info.day1 || { intensity: "DRY", warning: "NIL" };
+            
+            let level = "grey";
+            let code = "Dry";
+            let intensity = d1.intensity;
+            let warning = d1.warning;
 
-              if (intensity === 'HEAVY') { level = "orange"; code = "Heavy + GW"; }
-              else if (intensity === 'LIGHT') { level = "green-yellow"; code = "Light + GW"; }
-              else if (intensity === 'H' || intensity.includes('H(') || intensity.includes('VH(') || intensity.includes('EXH(') || intensity.includes('ExH(')) {
-                level = "red";
-                code = "H + GR + GW";
+            if (intensity === 'HEAVY') { level = "orange"; code = "Heavy + GW"; }
+            else if (intensity === 'LIGHT') { level = "green-yellow"; code = "Light + GW"; }
+            else if (intensity === 'H' || intensity.includes('H(') || intensity.includes('VH(') || intensity.includes('EXH(') || intensity.includes('ExH(')) {
+              level = "red";
+              code = "H + GR + GW";
+            }
+            else if (intensity === 'L/M') {
+              const coastal = ["DAKSHINA KANNADA", "UDUPI", "UTTARA KANNADA"];
+              if (coastal.includes(dist)) {
+                level = "blue";
+                code = "L/M TSH";
+              } else {
+                level = "yellow";
+                code = "L/M + GW";
               }
-              else if (intensity === 'L/M') {
-                const coastal = ["DAKSHINA KANNADA", "UDUPI", "UTTARA KANNADA"];
-                if (coastal.includes(dist)) {
-                  level = "blue";
-                  code = "L/M TSH";
-                } else {
-                  level = "yellow";
-                  code = "L/M + GW";
-                }
-              }
+            }
 
-              currentMay22[dist] = {
-                intensity: intensity,
-                warning: warning,
-                probability: d1.probability || "VERY LIKELY",
-                code: code,
-                level: level
+            currentMay22[dist] = {
+              intensity: intensity,
+              warning: warning,
+              probability: d1.probability || "VERY LIKELY",
+              code: code,
+              level: level
+            };
+          });
+
+          // Apply all 7 days of forecast to May 19
+          Object.keys(parsedForecast).forEach(dist => {
+            if (!currentMay19[dist]) currentMay19[dist] = {};
+            for (let d = 1; d <= 7; d++) {
+              currentMay19[dist][`day${d}`] = parsedForecast[dist][`day${d}`] || {
+                intensity: "DRY",
+                warning: "NIL",
+                probability: "VERY LIKELY"
               };
-            });
-          } else {
-            // Apply all 7 days of forecast to May 19
-            Object.keys(parsedForecast).forEach(dist => {
-              if (!currentMay19[dist]) currentMay19[dist] = {};
-              for (let d = 1; d <= 7; d++) {
-                currentMay19[dist][`day${d}`] = parsedForecast[dist][`day${d}`] || {
-                  intensity: "DRY",
-                  warning: "NIL",
-                  probability: "VERY LIKELY"
-                };
-              }
-            });
-          }
+            }
+          });
 
           // Render updated table
           renderEditor();
