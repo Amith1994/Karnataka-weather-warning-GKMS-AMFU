@@ -5,7 +5,7 @@
 
 // Application State
 const state = {
-  currentDataset: 'may22', // 'may19' or 'may22'
+  currentDataset: 'may19', // 'may19' or 'may22'
   currentDay: 1, // Day 1 to 7 (used for may19)
   isPlaying: false,
   playInterval: null,
@@ -14,7 +14,9 @@ const state = {
   geojsonCache: null,
   geojsonLayer: null,
   map: null,
-  districtsList: []
+  districtsList: [],
+  forecastDate19: '26-May-2026',   // Updated dynamically from forecast_data.json
+  forecastDate22: '26-May-2026'    // Updated dynamically from forecast_data.json
 };
 
 // Global variables for admin customization storage
@@ -110,47 +112,56 @@ function updateDatasetDropdownLabels() {
   const selectEl = document.getElementById('dataset-select');
   if (!selectEl) return;
   
-  const dateMay22 = localStorage.getItem('custom_may22_forecast_date') || "22-May-2026";
-  const dateMay19 = localStorage.getItem('custom_may19_forecast_date') || "19-May-2026";
-  
   const optMay22 = selectEl.querySelector('option[value="may22"]');
   if (optMay22) {
-    optMay22.innerText = `${dateMay22} (Detailed Warnings)`;
+    optMay22.textContent = `${state.forecastDate22} (Day 1 Warnings)`;
   }
   
   const optMay19 = selectEl.querySelector('option[value="may19"]');
   if (optMay19) {
-    optMay19.innerText = `${dateMay19} (7-Day Forecast)`;
+    optMay19.textContent = `${state.forecastDate19} (7-Day Forecast)`;
   }
 }
 
 async function loadCustomData() {
   try {
-    const response = await fetch('forecast_data.json');
+    const response = await fetch('forecast_data.json?_=' + Date.now()); // bypass cache
     if (response.ok) {
       const data = await response.json();
       customMay22 = data.customMay22 || null;
       customMay19 = data.customMay19 || null;
       
-      const savedDate19 = data.customMay19ForecastDate;
-      if (savedDate19) {
-        updateDatesMapping(savedDate19);
-        localStorage.setItem('custom_may19_forecast_date', savedDate19);
-      } else {
-        updateDatesMapping("19-May-2026");
+      // Store dates in state (source of truth)
+      if (data.customMay19ForecastDate) {
+        state.forecastDate19 = data.customMay19ForecastDate;
+      }
+      if (data.customMay22ForecastDate) {
+        state.forecastDate22 = data.customMay22ForecastDate;
       }
       
-      const savedDate22 = data.customMay22ForecastDate;
-      if (savedDate22) {
-        localStorage.setItem('custom_may22_forecast_date', savedDate22);
-      }
+      // Also sync to localStorage
+      localStorage.setItem('custom_may19_forecast_date', state.forecastDate19);
+      localStorage.setItem('custom_may22_forecast_date', state.forecastDate22);
+      
+      updateDatesMapping(state.forecastDate19);
     } else {
+      // Fallback to localStorage
       loadCustomDataFromStorage();
+      const ls19 = localStorage.getItem('custom_may19_forecast_date');
+      const ls22 = localStorage.getItem('custom_may22_forecast_date');
+      if (ls19) state.forecastDate19 = ls19;
+      if (ls22) state.forecastDate22 = ls22;
+      updateDatesMapping(state.forecastDate19);
     }
     updateDatasetDropdownLabels();
   } catch (e) {
     console.error("Error loading forecast_data.json, falling back to LocalStorage:", e);
     loadCustomDataFromStorage();
+    const ls19 = localStorage.getItem('custom_may19_forecast_date');
+    const ls22 = localStorage.getItem('custom_may22_forecast_date');
+    if (ls19) state.forecastDate19 = ls19;
+    if (ls22) state.forecastDate22 = ls22;
+    updateDatesMapping(state.forecastDate19);
     updateDatasetDropdownLabels();
   }
 }
@@ -481,15 +492,23 @@ function displayDistrictDetails(feature, customName = null) {
 function buildMicroTimeline(props) {
   const container = document.getElementById('micro-timeline');
   container.innerHTML = '';
-  const forecast = props.forecast || {};
+  const matchedName = props.matched_name;
   
   for (let d = 1; d <= 7; d++) {
-    const dayData = forecast[`day${d}`] || {};
+    // Prefer customMay19 data (from uploaded PDF) over GeoJSON default
+    let dayData = {};
+    if (customMay19 && customMay19[matchedName] && customMay19[matchedName][`day${d}`]) {
+      dayData = customMay19[matchedName][`day${d}`];
+    } else {
+      dayData = (props.forecast || {})[`day${d}`] || {};
+    }
+    
     const idx = getWarningIndex(dayData.intensity, dayData.warning);
+    const dateLabel = datesMapping[d] ? datesMapping[d].date : `Day ${d}`;
     
     const dot = document.createElement('div');
     dot.className = `timeline-dot ${d === state.currentDay ? 'active' : ''}`;
-    dot.title = `Day ${d}: ${dayData.intensity || 'DRY'} | ${dayData.warning}`;
+    dot.title = `${dateLabel}: ${dayData.intensity || 'DRY'} | ${dayData.warning || 'NIL'}`;
     
     dot.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -506,44 +525,62 @@ function buildMicroTimeline(props) {
 
 // Dynamic Counts Card calculations
 function updateStatistics() {
+  const allDistricts = [
+    "BAGALKOTE","BALLARI","BELAGAVI","BENGALURU RURAL","BENGALURU URBAN","BIDAR",
+    "CHAMARAJANAGAR","CHIKKABALLAPURA","CHIKKAMAGALURU","CHITRADURGA","DAKSHINA KANNADA",
+    "DAVANGERE","DHARWAD","GADAG","HASSAN","HAVERI","KALABURGI","KODAGU","KOLAR",
+    "KOPPAL","MANDYA","MYSURU","RAICHUR","RAMANAGARA","SHIVAMOGGA","TUMAKURU",
+    "UDUPI","UTTARA KANNADA","VIJAYANAGARA","VIJAYAPURA","YADGIR"
+  ];
+
   if (state.currentDataset === 'may22') {
-    // Hardcoded screenshot statistics
-    document.getElementById('card-red-val').innerText = "4";
-    document.getElementById('card-orange-val').innerText = "6";
-    document.getElementById('card-yellow-val').innerText = "14";
-    document.getElementById('card-grey-val').innerText = "3";
-    
+    // Dynamically count from customMay22 (loaded from PDF)
+    let red = 0, orange = 0, yellow = 0, grey = 0, blue = 0;
+    allDistricts.forEach(name => {
+      const d = (customMay22 && customMay22[name]) ? customMay22[name] : null;
+      if (!d) { grey++; return; }
+      if (d.level === 'red') red++;
+      else if (d.level === 'orange') orange++;
+      else if (d.level === 'yellow') yellow++;
+      else if (d.level === 'blue') blue++;
+      else grey++;
+    });
+
+    document.getElementById('card-red-val').innerText = red;
+    document.getElementById('card-orange-val').innerText = orange;
+    document.getElementById('card-yellow-val').innerText = yellow + blue;
+    document.getElementById('card-grey-val').innerText = grey;
+
     document.getElementById('card-red-lbl').innerText = "Red · Heavy + Hail";
     document.getElementById('card-orange-lbl').innerText = "Orange · Heavy Rain";
-    document.getElementById('card-yellow-lbl').innerText = "Yellow · Moderate";
+    document.getElementById('card-yellow-lbl').innerText = "Yellow/Blue · Moderate";
     document.getElementById('card-grey-lbl').innerText = "Dry · No Warning";
   } else {
-    // Dynamically count for selected Day of May 19
-    if (!state.geojsonCache) return;
+    // Dynamically count for selected Day from customMay19 first, then GeoJSON
+    const coastal = ["DAKSHINA KANNADA", "UDUPI", "UTTARA KANNADA"];
+    let red = 0, orange = 0, yellow = 0, grey = 0;
+    const dayKey = `day${state.currentDay}`;
 
-    let red = 0;
-    let orange = 0;
-    let yellow = 0;
-    let grey = 0;
+    allDistricts.forEach(name => {
+      if (coastal.includes(name)) return; // skip coastal in count
 
-    state.geojsonCache.features.forEach(f => {
-      // Exclude Coastal from count summaries to maintain exact 27 district card numbers
-      const name = f.properties.matched_name;
-      const coastal = ["DAKSHINA KANNADA", "UDUPI", "UTTARA KANNADA"];
-      if (coastal.includes(name)) return;
+      let dayData = null;
+      if (customMay19 && customMay19[name] && customMay19[name][dayKey]) {
+        dayData = customMay19[name][dayKey];
+      } else if (state.geojsonCache) {
+        const feat = state.geojsonCache.features.find(f => f.properties.matched_name === name);
+        if (feat && feat.properties.forecast) {
+          dayData = feat.properties.forecast[dayKey];
+        }
+      }
 
-      const forecast = f.properties.forecast || {};
-      const dayData = forecast[`day${state.currentDay}`] || {};
-      const idx = getWarningIndex(dayData.intensity, dayData.warning);
-
+      const idx = dayData ? getWarningIndex(dayData.intensity, dayData.warning) : 0;
       if (idx === 3) red++;
       else if (idx === 2) orange++;
       else if (idx === 1) yellow++;
       else grey++;
     });
 
-    // Handle Ballari / Vijayanagara duplication count adjust if needed
-    // The total counts sum is 27 interior districts.
     document.getElementById('card-red-val').innerText = red;
     document.getElementById('card-orange-val').innerText = orange;
     document.getElementById('card-yellow-val').innerText = yellow;
@@ -707,9 +744,20 @@ function setDay(dayNum) {
   const slider = document.getElementById('day-slider');
   slider.value = state.currentDay;
 
+  // Make sure datesMapping is up to date
+  if (!datesMapping[state.currentDay]) {
+    updateDatesMapping(state.forecastDate19);
+  }
+
   const dateInfo = datesMapping[state.currentDay];
   document.getElementById('active-date-display').innerText = dateInfo.date;
   document.getElementById('active-day-display').innerText = `Day ${state.currentDay} Forecast`;
+
+  // Update dashboard subtitle with this day's date
+  const subtitle = document.getElementById('dashboard-subtitle');
+  if (subtitle) {
+    subtitle.innerText = `7-Day Forecast · Day ${state.currentDay} · ${dateInfo.date} · Issued on ${state.forecastDate19}`;
+  }
 
   document.querySelectorAll('.slider-ticks .tick').forEach(t => {
     if (parseInt(t.getAttribute('data-day')) === state.currentDay) {
@@ -738,13 +786,14 @@ function setDataset(datasetName) {
   const controls = document.getElementById('map-controls-panel');
   const title = document.getElementById('dashboard-title');
   const subtitle = document.getElementById('dashboard-subtitle');
+  const selectEl = document.getElementById('dataset-select');
+  if (selectEl) selectEl.value = datasetName;
 
   if (datasetName === 'may22') {
-    // May 22 Mode
+    // Day-1 Single Snapshot Mode
     controls.style.display = 'none';
     title.innerText = "IMD Karnataka Weather Warnings";
-    const dateMay22 = localStorage.getItem('custom_may22_forecast_date') || "22-May-2026";
-    subtitle.innerText = `Forecast valid from 0830 IST of ${dateMay22} · Issued by India Meteorological Department · Day 1`;
+    subtitle.innerText = `Forecast valid from 0830 IST · ${state.forecastDate22} · Issued by India Meteorological Department`;
     
     // Stop timeline playback
     if (state.isPlaying) togglePlayback();
@@ -753,12 +802,11 @@ function setDataset(datasetName) {
     updateStatistics();
     renderRegionalTables();
   } else {
-    // May 19 7-Day Timeline Mode
+    // 7-Day Timeline Mode
     controls.style.display = 'block';
     title.innerText = "IMD Karnataka Forecast Trend";
-    const dateMay19 = localStorage.getItem('custom_may19_forecast_date') || "19-May-2026";
-    updateDatesMapping(dateMay19);
-    subtitle.innerText = `7-Day Forecast Cycle · Meteorological Forecast issued on ${dateMay19}`;
+    updateDatesMapping(state.forecastDate19);
+    subtitle.innerText = `7-Day Forecast Cycle · Issued on ${state.forecastDate19} · India Meteorological Department`;
     
     setDay(state.currentDay);
   }
