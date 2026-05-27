@@ -1,75 +1,76 @@
 {
+  "updatedAt": 1779866447084,
   "customMay19": {
     "CHIKKAMAGALURU": {
       "day1": {
-        "intensity": "L",
-        "warning": "TSH/GW",
+        "intensity": "H(R+)",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "DAKSHINA KANNADA": {
       "day1": {
         "intensity": "L/M",
-        "warning": "TSH",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
@@ -77,80 +78,80 @@
     "DAVANGERE": {
       "day1": {
         "intensity": "L/M",
-        "warning": "TSH/GW",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "GADAG": {
       "day1": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/GR/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
     },
     "KALABURGI": {
       "day1": {
-        "intensity": "DRY",
+        "intensity": "L/M",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
@@ -180,155 +181,155 @@
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
     },
     "MANDYA": {
       "day1": {
-        "intensity": "L",
-        "warning": "TSH/GW",
+        "intensity": "L/M",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "SHIVAMOGGA": {
       "day1": {
-        "intensity": "L",
-        "warning": "TSH/GW",
+        "intensity": "L/M",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "TUMAKURU": {
       "day1": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "H(R+)",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "UDUPI": {
       "day1": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
@@ -336,49 +337,49 @@
     "UTTARA KANNADA": {
       "day1": {
         "intensity": "L/M",
-        "warning": "TSH",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "VIJAYAPURA": {
       "day1": {
         "intensity": "L/M",
-        "warning": "TSH/GW",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
@@ -402,62 +403,62 @@
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
     },
     "MYSURU": {
       "day1": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "L/M",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "BAGALKOTE": {
       "day1": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/GR/R+",
+        "intensity": "L/M",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
@@ -476,14 +477,14 @@
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
     },
     "BIDAR": {
       "day1": {
-        "intensity": "DRY",
+        "intensity": "L/M",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
@@ -513,7 +514,7 @@
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
@@ -521,165 +522,128 @@
     "CHAMARAJANAGAR": {
       "day1": {
         "intensity": "L/M",
-        "warning": "TSH/GW",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "HASSAN": {
       "day1": {
         "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "HAVERI": {
       "day1": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
     },
     "KODAGU": {
       "day1": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day4": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day5": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day6": {
         "intensity": "L/M",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
-      "day7": {
-        "intensity": "L/M",
-        "warning": "NIL",
-        "probability": "VERY LIKELY"
-      }
-    },
-    "KOPPAL": {
-      "day1": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
       "day2": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
@@ -688,109 +652,146 @@
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L",
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
+      }
+    },
+    "KOPPAL": {
+      "day1": {
+        "intensity": "L/M",
+        "warning": "DRY",
+        "probability": "VERY LIKELY"
+      },
+      "day2": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day3": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day4": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day5": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day6": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day7": {
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
     },
     "BENGALURU RURAL": {
       "day1": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "L/M",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "BENGALURU URBAN": {
       "day1": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "L/M",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "BELAGAVI": {
       "day1": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/GR/R+",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
@@ -799,8 +800,8 @@
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day6": {
@@ -809,44 +810,44 @@
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
     },
     "BALLARI": {
       "day1": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day4": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day5": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
+      "day2": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day3": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day4": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
+      },
+      "day5": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day6": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
+      },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
@@ -854,123 +855,12 @@
     "VIJAYANAGARA": {
       "day1": {
         "intensity": "L/M",
-        "warning": "TSH/GW",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day4": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day5": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
-      },
-      "day7": {
-        "intensity": "L/M",
-        "warning": "NIL",
-        "probability": "VERY LIKELY"
-      }
-    },
-    "CHIKKABALLAPURA": {
-      "day1": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
-        "probability": "VERY LIKELY"
-      },
-      "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day4": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day5": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day6": {
-        "intensity": "L",
-        "warning": "NIL",
-        "probability": "VERY LIKELY"
-      },
-      "day7": {
-        "intensity": "L/M",
-        "warning": "NIL",
-        "probability": "VERY LIKELY"
-      }
-    },
-    "CHITRADURGA": {
-      "day1": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day2": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
-        "probability": "VERY LIKELY"
-      },
-      "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day4": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day5": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
-      },
-      "day6": {
-        "intensity": "L",
-        "warning": "NIL",
-        "probability": "VERY LIKELY"
-      },
-      "day7": {
-        "intensity": "L/M",
-        "warning": "NIL",
-        "probability": "VERY LIKELY"
-      }
-    },
-    "DHARWAD": {
-      "day1": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/GR/R+",
-        "probability": "VERY LIKELY"
-      },
-      "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
         "probability": "VERY LIKELY"
       },
       "day3": {
@@ -979,77 +869,188 @@
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L",
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
+      }
+    },
+    "CHIKKABALLAPURA": {
+      "day1": {
+        "intensity": "L/M",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day2": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day3": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day4": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day5": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
+      },
+      "day6": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day7": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
+      }
+    },
+    "CHITRADURGA": {
+      "day1": {
+        "intensity": "H(R+)",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day2": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day3": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day4": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day5": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
+      },
+      "day6": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day7": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
+      }
+    },
+    "DHARWAD": {
+      "day1": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day2": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day3": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day4": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day5": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day6": {
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "VERY LIKELY"
+      },
+      "day7": {
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
     },
     "KOLAR": {
       "day1": {
-        "intensity": "H(R+)",
-        "warning": "TSH/GW/R+",
+        "intensity": "L/M",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "RAICHUR": {
       "day1": {
         "intensity": "L/M",
-        "warning": "TSH/GW",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
@@ -1063,67 +1064,67 @@
         "probability": "VERY LIKELY"
       },
       "day6": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
     },
     "RAMANAGARA": {
       "day1": {
-        "intensity": "L",
-        "warning": "TSH/GW",
+        "intensity": "L/M",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day5": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
-        "probability": "VERY LIKELY"
+        "intensity": "DRY",
+        "warning": "NIL",
+        "probability": "LIKELY"
       },
       "day6": {
-        "intensity": "L",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
-        "probability": "VERY LIKELY"
+        "probability": "LIKELY"
       }
     },
     "YADGIR": {
       "day1": {
-        "intensity": "DRY",
+        "intensity": "L/M",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day2": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day3": {
-        "intensity": "L/M",
-        "warning": "TSH/GW",
+        "intensity": "DRY",
+        "warning": "NIL",
         "probability": "VERY LIKELY"
       },
       "day4": {
@@ -1142,7 +1143,7 @@
         "probability": "VERY LIKELY"
       },
       "day7": {
-        "intensity": "L/M",
+        "intensity": "DRY",
         "warning": "NIL",
         "probability": "VERY LIKELY"
       }
@@ -1151,222 +1152,222 @@
   "customMay22": {
     "DAKSHINA KANNADA": {
       "intensity": "L/M",
-      "warning": "TSH",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "L/M TSH",
       "level": "blue"
     },
     "UDUPI": {
-      "intensity": "L/M",
-      "warning": "TSH",
+      "intensity": "DRY",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
-      "code": "L/M TSH",
-      "level": "blue"
+      "code": "Dry",
+      "level": "grey"
     },
     "UTTARA KANNADA": {
       "intensity": "L/M",
-      "warning": "TSH",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "L/M TSH",
       "level": "blue"
     },
     "BAGALKOTE": {
-      "intensity": "H(R+)",
-      "warning": "TSH/GW/GR/R+",
-      "probability": "VERY LIKELY",
-      "code": "H + GR + GW",
-      "level": "red"
-    },
-    "BELAGAVI": {
-      "intensity": "H(R+)",
-      "warning": "TSH/GW/GR/R+",
-      "probability": "VERY LIKELY",
-      "code": "H + GR + GW",
-      "level": "red"
-    },
-    "BIDAR": {
-      "intensity": "DRY",
-      "warning": "NIL",
-      "probability": "VERY LIKELY",
-      "code": "Dry",
-      "level": "grey"
-    },
-    "DHARWAD": {
-      "intensity": "H(R+)",
-      "warning": "TSH/GW/GR/R+",
-      "probability": "VERY LIKELY",
-      "code": "H + GR + GW",
-      "level": "red"
-    },
-    "GADAG": {
-      "intensity": "H(R+)",
-      "warning": "TSH/GW/GR/R+",
-      "probability": "VERY LIKELY",
-      "code": "H + GR + GW",
-      "level": "red"
-    },
-    "HAVERI": {
       "intensity": "L/M",
-      "warning": "TSH/GW",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "L/M + GW",
       "level": "yellow"
     },
-    "KALABURGI": {
+    "BELAGAVI": {
       "intensity": "DRY",
       "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "Dry",
       "level": "grey"
     },
+    "BIDAR": {
+      "intensity": "L/M",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "L/M + GW",
+      "level": "yellow"
+    },
+    "DHARWAD": {
+      "intensity": "DRY",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "Dry",
+      "level": "grey"
+    },
+    "GADAG": {
+      "intensity": "DRY",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "Dry",
+      "level": "grey"
+    },
+    "HAVERI": {
+      "intensity": "DRY",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "Dry",
+      "level": "grey"
+    },
+    "KALABURGI": {
+      "intensity": "L/M",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "L/M + GW",
+      "level": "yellow"
+    },
     "KOPPAL": {
       "intensity": "L/M",
-      "warning": "TSH/GW",
+      "warning": "DRY",
       "probability": "VERY LIKELY",
       "code": "L/M + GW",
       "level": "yellow"
     },
     "RAICHUR": {
       "intensity": "L/M",
-      "warning": "TSH/GW",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "L/M + GW",
       "level": "yellow"
     },
     "VIJAYAPURA": {
       "intensity": "L/M",
-      "warning": "TSH/GW",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "L/M + GW",
       "level": "yellow"
     },
     "YADGIR": {
+      "intensity": "L/M",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "L/M + GW",
+      "level": "yellow"
+    },
+    "BALLARI": {
       "intensity": "DRY",
       "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "Dry",
       "level": "grey"
     },
-    "BALLARI": {
-      "intensity": "L/M",
-      "warning": "TSH/GW",
-      "probability": "VERY LIKELY",
-      "code": "L/M + GW",
-      "level": "yellow"
-    },
     "VIJAYANAGARA": {
       "intensity": "L/M",
-      "warning": "TSH/GW",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "L/M + GW",
       "level": "yellow"
     },
     "BENGALURU RURAL": {
-      "intensity": "H(R+)",
-      "warning": "TSH/GW/R+",
+      "intensity": "L/M",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
-      "code": "H + GR + GW",
-      "level": "red"
+      "code": "L/M + GW",
+      "level": "yellow"
     },
     "BENGALURU URBAN": {
-      "intensity": "H(R+)",
-      "warning": "TSH/GW/R+",
+      "intensity": "L/M",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
-      "code": "H + GR + GW",
-      "level": "red"
+      "code": "L/M + GW",
+      "level": "yellow"
     },
     "CHAMARAJANAGAR": {
       "intensity": "L/M",
-      "warning": "TSH/GW",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "L/M + GW",
       "level": "yellow"
     },
     "CHIKKABALLAPURA": {
+      "intensity": "L/M",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "L/M + GW",
+      "level": "yellow"
+    },
+    "CHIKKAMAGALURU": {
       "intensity": "H(R+)",
-      "warning": "TSH/GW/R+",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "H + GR + GW",
       "level": "red"
     },
-    "CHIKKAMAGALURU": {
-      "intensity": "DRY",
-      "warning": "TSH/GW",
-      "probability": "VERY LIKELY",
-      "code": "Dry",
-      "level": "grey"
-    },
     "CHITRADURGA": {
-      "intensity": "DRY",
-      "warning": "TSH/GW",
+      "intensity": "H(R+)",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
-      "code": "Dry",
-      "level": "grey"
+      "code": "H + GR + GW",
+      "level": "red"
     },
     "DAVANGERE": {
       "intensity": "L/M",
-      "warning": "TSH/GW",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "L/M + GW",
       "level": "yellow"
     },
     "HASSAN": {
       "intensity": "H(R+)",
-      "warning": "TSH/GW/R+",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "H + GR + GW",
       "level": "red"
     },
     "KODAGU": {
-      "intensity": "DRY",
-      "warning": "TSH/GW",
-      "probability": "VERY LIKELY",
-      "code": "Dry",
-      "level": "grey"
-    },
-    "KOLAR": {
-      "intensity": "H(R+)",
-      "warning": "TSH/GW/R+",
-      "probability": "VERY LIKELY",
-      "code": "H + GR + GW",
-      "level": "red"
-    },
-    "MANDYA": {
-      "intensity": "DRY",
-      "warning": "TSH/GW",
-      "probability": "VERY LIKELY",
-      "code": "Dry",
-      "level": "grey"
-    },
-    "MYSURU": {
-      "intensity": "H(R+)",
-      "warning": "TSH/GW/R+",
-      "probability": "VERY LIKELY",
-      "code": "H + GR + GW",
-      "level": "red"
-    },
-    "RAMANAGARA": {
-      "intensity": "DRY",
-      "warning": "TSH/GW",
-      "probability": "VERY LIKELY",
-      "code": "Dry",
-      "level": "grey"
-    },
-    "SHIVAMOGGA": {
-      "intensity": "DRY",
-      "warning": "TSH/GW",
-      "probability": "VERY LIKELY",
-      "code": "Dry",
-      "level": "grey"
-    },
-    "TUMAKURU": {
       "intensity": "L/M",
-      "warning": "TSH/GW",
+      "warning": "NIL",
       "probability": "VERY LIKELY",
       "code": "L/M + GW",
       "level": "yellow"
+    },
+    "KOLAR": {
+      "intensity": "L/M",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "L/M + GW",
+      "level": "yellow"
+    },
+    "MANDYA": {
+      "intensity": "L/M",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "L/M + GW",
+      "level": "yellow"
+    },
+    "MYSURU": {
+      "intensity": "L/M",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "L/M + GW",
+      "level": "yellow"
+    },
+    "RAMANAGARA": {
+      "intensity": "L/M",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "L/M + GW",
+      "level": "yellow"
+    },
+    "SHIVAMOGGA": {
+      "intensity": "L/M",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "L/M + GW",
+      "level": "yellow"
+    },
+    "TUMAKURU": {
+      "intensity": "H(R+)",
+      "warning": "NIL",
+      "probability": "VERY LIKELY",
+      "code": "H + GR + GW",
+      "level": "red"
     }
   },
-  "customMay19ForecastDate": "22-May-2026",
-  "customMay22ForecastDate": "22-May-2026"
+  "customMay19ForecastDate": "26-May-2026",
+  "customMay22ForecastDate": "26-May-2026"
 }
