@@ -140,20 +140,32 @@ async function loadCustomData() {
     if (response.ok) {
       const data = await response.json();
       state.lastDataSignature = JSON.stringify(data);
-      customMay22 = data.customMay22 || null;
-      customMay19 = data.customMay19 || null;
       
-      // Store dates in state (source of truth)
-      if (data.customMay19ForecastDate) {
-        state.forecastDate19 = data.customMay19ForecastDate;
-      }
-      if (data.customMay22ForecastDate) {
-        state.forecastDate22 = data.customMay22ForecastDate;
-      }
+      const serverTimestamp = data.updatedAt || 0;
+      const localTimestamp = parseInt(localStorage.getItem('custom_data_timestamp') || '0', 10);
       
-      // Also sync to localStorage
-      localStorage.setItem('custom_may19_forecast_date', state.forecastDate19);
-      localStorage.setItem('custom_may22_forecast_date', state.forecastDate22);
+      if (localTimestamp > serverTimestamp) {
+        loadCustomDataFromStorage();
+      } else {
+        customMay22 = data.customMay22 || null;
+        customMay19 = data.customMay19 || null;
+        
+        // Sync to localStorage
+        localStorage.setItem('custom_may22_data', JSON.stringify(customMay22));
+        localStorage.setItem('custom_may19_data', JSON.stringify(customMay19));
+        localStorage.setItem('custom_data_timestamp', serverTimestamp);
+        
+        // Store dates in state (source of truth)
+        if (data.customMay19ForecastDate) {
+          state.forecastDate19 = data.customMay19ForecastDate;
+        }
+        if (data.customMay22ForecastDate) {
+          state.forecastDate22 = data.customMay22ForecastDate;
+        }
+        
+        localStorage.setItem('custom_may19_forecast_date', state.forecastDate19);
+        localStorage.setItem('custom_may22_forecast_date', state.forecastDate22);
+      }
       
       updateDatesMapping(state.forecastDate19);
     } else {

@@ -635,20 +635,28 @@
 
         // Try fetching from forecast_data.json first
         try {
-          const res = await fetch('forecast_data.json');
+          const res = await fetch('forecast_data.json?_=' + Date.now());
           if (res.ok) {
             const data = await res.json();
-            currentMay22 = data.customMay22 || JSON.parse(JSON.stringify(defaultMay22));
-            currentMay19 = data.customMay19 || JSON.parse(JSON.stringify(defaultMay19));
+            const serverTimestamp = data.updatedAt || 0;
+            const localTimestamp = parseInt(localStorage.getItem('custom_data_timestamp') || '0', 10);
             
-            // Save to localStorage to keep it in sync
-            localStorage.setItem('custom_may22_data', JSON.stringify(currentMay22));
-            localStorage.setItem('custom_may19_data', JSON.stringify(currentMay19));
-            if (data.customMay22ForecastDate) {
-              localStorage.setItem('custom_may22_forecast_date', data.customMay22ForecastDate);
-            }
-            if (data.customMay19ForecastDate) {
-              localStorage.setItem('custom_may19_forecast_date', data.customMay19ForecastDate);
+            if (localTimestamp > serverTimestamp) {
+              loadFromLocalStorage();
+            } else {
+              currentMay22 = data.customMay22 || JSON.parse(JSON.stringify(defaultMay22));
+              currentMay19 = data.customMay19 || JSON.parse(JSON.stringify(defaultMay19));
+              
+              // Save to localStorage to keep it in sync
+              localStorage.setItem('custom_may22_data', JSON.stringify(currentMay22));
+              localStorage.setItem('custom_may19_data', JSON.stringify(currentMay19));
+              localStorage.setItem('custom_data_timestamp', serverTimestamp);
+              if (data.customMay22ForecastDate) {
+                localStorage.setItem('custom_may22_forecast_date', data.customMay22ForecastDate);
+              }
+              if (data.customMay19ForecastDate) {
+                localStorage.setItem('custom_may19_forecast_date', data.customMay19ForecastDate);
+              }
             }
           } else {
             loadFromLocalStorage();
@@ -827,17 +835,19 @@
         });
       }
 
-      // Always save both datasets and the date to local storage
+      const updatedAt = Date.now();
       localStorage.setItem('custom_may22_data', JSON.stringify(currentMay22));
       localStorage.setItem('custom_may22_forecast_date', forecastDate);
       localStorage.setItem('custom_may19_data', JSON.stringify(currentMay19));
       localStorage.setItem('custom_may19_forecast_date', forecastDate);
+      localStorage.setItem('custom_data_timestamp', updatedAt);
 
       // Automatically commit to GitHub if Token is present
       const ghToken = GITHUB_TOKEN || localStorage.getItem('github_access_token') || "";
       if (ghToken) {
         // Construct JSON structure matching forecast_data.json
         const forecastJSON = JSON.stringify({
+          updatedAt: updatedAt,
           customMay19: currentMay19,
           customMay22: currentMay22,
           customMay19ForecastDate: forecastDate,
