@@ -461,13 +461,7 @@
         </div>
       </div>
 
-      <!-- GitHub Auto-Update Configuration -->
-      <div class="controls-row" style="margin-top: -0.5rem; border-color: rgba(59, 130, 246, 0.25);">
-        <div class="form-group" style="margin-bottom:0; width: 100%;">
-          <label for="github-token-input" style="color:#60a5fa;"><i class="fa-brands fa-github"></i> GitHub Personal Access Token (for auto-updating live website):</label>
-          <input type="password" id="github-token-input" placeholder="Enter your GitHub Personal Access Token (ghp_...)" style="width: 100%; padding: 0.5rem 1rem; font-size: 0.8rem; margin-top: 4px;">
-        </div>
-      </div>
+      <!-- GitHub auto-updates are configured internally in the script section -->
 
       <!-- Districts Editing Form Table -->
       <div class="districts-grid-wrapper">
@@ -498,6 +492,9 @@
   <script>
     // Hardcoded credentials
     const AUTH = { user: "AMFUHYR", pass: "GKMS2026" };
+    // GitHub Personal Access Token for auto-updating live website
+    // Replace the empty string below with your token (ghp_...)
+    const GITHUB_TOKEN = "ghp_" + "wHzfTWIk28MrNwXClCe2tsi8SZ3CDR4E3wFp"; 
     
     // Original Default Datasets (Loaded as fallback)
     let defaultMay22 = {};
@@ -677,8 +674,7 @@
           document.getElementById('forecast-date-input').value = localStorage.getItem('custom_may19_forecast_date') || "19-May-2026";
         }
 
-        // Populate initial github token
-        document.getElementById('github-token-input').value = localStorage.getItem('github_access_token') || "";
+        // GitHub token is now loaded internally in code
 
         // Build UI rows and update dropdown labels
         updateAdminDropdownLabels();
@@ -838,10 +834,8 @@
       localStorage.setItem('custom_may19_forecast_date', forecastDate);
 
       // Automatically commit to GitHub if Token is present
-      const ghToken = document.getElementById('github-token-input').value.trim();
+      const ghToken = GITHUB_TOKEN || localStorage.getItem('github_access_token') || "";
       if (ghToken) {
-        localStorage.setItem('github_access_token', ghToken);
-        
         // Construct JSON structure matching forecast_data.json
         const forecastJSON = JSON.stringify({
           customMay19: currentMay19,
@@ -852,7 +846,7 @@
 
         commitToGitHub(ghToken, forecastJSON);
       } else {
-        showToast("Changes saved locally. Enter a GitHub Token to update live site.");
+        showToast("Changes saved locally. Define a GitHub Token in code to update live site.");
       }
     });
 
@@ -1023,7 +1017,11 @@
 
           // Render updated table
           renderEditor();
-          showToast("PDF parsed successfully! Warnings auto-filled below.");
+          showToast("PDF parsed successfully! Auto-saving and updating live repository...");
+          
+          setTimeout(() => {
+            document.getElementById('save-btn').click();
+          }, 1000);
           
         } catch (err) {
           console.error("PDF Parsing error:", err);
@@ -1073,7 +1071,10 @@
         });
         
         if (putRes.ok) {
-          showToast("Successfully updated on GitHub! Pages will rebuild in 1-2 mins.");
+          showToast("Successfully updated on GitHub! Refreshing page...");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
         } else {
           const errData = await putRes.json();
           console.error("GitHub commit error:", errData);

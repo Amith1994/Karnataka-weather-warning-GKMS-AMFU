@@ -431,9 +431,9 @@ body {
 }
 
 /* Detail styling based on weather alerts */
-.warn-level-0 { background-color: var(--color-grey-bg); border-color: var(--color-grey-dark); }
-.warn-level-0 .warning-badge { color: #fff; background-color: var(--color-grey); }
-.warn-level-0 .warning-icon { color: var(--color-grey); }
+.warn-level-grey { background-color: var(--color-grey-bg); border-color: var(--color-grey-dark); }
+.warn-level-grey .warning-badge { color: #fff; background-color: var(--color-grey); }
+.warn-level-grey .warning-icon { color: var(--color-grey); }
 
 .warn-level-blue { background-color: var(--color-blue-bg); border-color: var(--color-blue); }
 .warn-level-blue .warning-badge { color: #fff; background-color: var(--color-blue); }
@@ -443,17 +443,17 @@ body {
 .warn-level-green-yellow .warning-badge { color: #fff; background-color: var(--color-green-yellow-dark); }
 .warn-level-green-yellow .warning-icon { color: var(--color-green-yellow-dark); }
 
-.warn-level-1 { background-color: var(--color-yellow-bg); border-color: var(--color-yellow-dark); }
-.warn-level-1 .warning-badge { color: #000; background-color: var(--color-yellow); }
-.warn-level-1 .warning-icon { color: var(--color-yellow-dark); }
+.warn-level-yellow { background-color: var(--color-yellow-bg); border-color: var(--color-yellow-dark); }
+.warn-level-yellow .warning-badge { color: #000; background-color: var(--color-yellow); }
+.warn-level-yellow .warning-icon { color: var(--color-yellow-dark); }
 
-.warn-level-2 { background-color: var(--color-orange-bg); border-color: var(--color-orange); }
-.warn-level-2 .warning-badge { color: #fff; background-color: var(--color-orange); }
-.warn-level-2 .warning-icon { color: var(--color-orange); }
+.warn-level-orange { background-color: var(--color-orange-bg); border-color: var(--color-orange); }
+.warn-level-orange .warning-badge { color: #fff; background-color: var(--color-orange); }
+.warn-level-orange .warning-icon { color: var(--color-orange); }
 
-.warn-level-3 { background-color: var(--color-red-bg); border-color: var(--color-red); }
-.warn-level-3 .warning-badge { color: #fff; background-color: var(--color-red); }
-.warn-level-3 .warning-icon { color: var(--color-red); }
+.warn-level-red { background-color: var(--color-red-bg); border-color: var(--color-red); }
+.warn-level-red .warning-badge { color: #fff; background-color: var(--color-red); }
+.warn-level-red .warning-icon { color: var(--color-red); }
 
 /* Micro timeline inside details panel */
 .micro-timeline-container h4 {

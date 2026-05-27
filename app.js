@@ -16,7 +16,8 @@ const state = {
   map: null,
   districtsList: [],
   forecastDate19: '26-May-2026',   // Updated dynamically from forecast_data.json
-  forecastDate22: '26-May-2026'    // Updated dynamically from forecast_data.json
+  forecastDate22: '26-May-2026',    // Updated dynamically from forecast_data.json
+  lastDataSignature: null
 };
 
 // Global variables for admin customization storage
@@ -138,6 +139,7 @@ async function loadCustomData() {
     const response = await fetch('forecast_data.json?_=' + Date.now()); // bypass cache
     if (response.ok) {
       const data = await response.json();
+      state.lastDataSignature = JSON.stringify(data);
       customMay22 = data.customMay22 || null;
       customMay19 = data.customMay19 || null;
       
@@ -231,10 +233,10 @@ const colorScale = {
 
 // Helper: Map May 19 data keys to HSL warning indexes (0 to 3)
 function getWarningIndex(intensity, warning) {
-  if (!intensity || intensity === 'DRY' || warning === 'NIL') return 0;
+  const intensityUpper = intensity ? intensity.toUpperCase() : '';
+  const warningUpper = warning ? warning.toUpperCase() : '';
   
-  const intensityUpper = intensity.toUpperCase();
-  const warningUpper = warning.toUpperCase();
+  if ((!intensityUpper || intensityUpper === 'DRY') && (!warningUpper || warningUpper === 'NIL')) return 0;
   
   if (intensityUpper.includes('EXH') || warningUpper.includes('EXH') || warningUpper.includes('S HW') || warningUpper.includes('RED')) {
     return 3; // Red
@@ -263,6 +265,68 @@ function getWarningColorHSL(index) {
 function capitalizeName(name) {
   if (!name) return "";
   return name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+
+// Format weather details for display
+function formatIntensity(intensity) {
+  if (!intensity) return "NIL";
+  const upper = intensity.toUpperCase().trim();
+  switch (upper) {
+    case 'L/M':
+    case 'L/M RAIN':
+      return 'L/M (Light to Moderate)';
+    case 'VL':
+      return 'VL (Very Light)';
+    case 'DRY':
+      return 'Dry / No Rain';
+    case 'LIGHT':
+    case 'LIGHT RAIN':
+      return 'Light Rain';
+    case 'HEAVY':
+    case 'HEAVY RAIN':
+      return 'Heavy Rain';
+    case 'H(R+)':
+      return 'H(R+) (Heavy Rain)';
+    case 'VH(R++)':
+      return 'VH(R++) (Very Heavy Rain)';
+    case 'ExH(R+++)':
+    case 'EXH(R+++)':
+      return 'ExH(R+++) (Extremely Heavy Rain)';
+    default:
+      return intensity;
+  }
+}
+
+function formatHazard(hazard) {
+  if (!hazard || hazard.toUpperCase() === 'NIL') return 'NIL';
+  const upper = hazard.toUpperCase().trim();
+  switch (upper) {
+    case 'TSH':
+      return 'TSH (Thunderstorm)';
+    case 'TSH/GW':
+      return 'TSH/GW (Thunderstorm & Gusty Wind)';
+    case 'TSH/GW/R+':
+      return 'TSH/GW/R+ (Thunderstorm, Gusty Wind & Heavy Rain)';
+    case 'COASTAL TSH':
+      return 'Coastal TSH (Coastal Thunderstorm)';
+    default:
+      return hazard;
+  }
+}
+
+function formatProbability(prob) {
+  if (!prob || prob.toUpperCase() === 'NIL') return 'NIL';
+  const upper = prob.toUpperCase().trim();
+  switch (upper) {
+    case 'VERY LIKELY':
+      return 'VERY LIKELY (51-75%)';
+    case 'MOST LIKELY':
+      return 'MOST LIKELY (>75%)';
+    case 'LIKELY':
+      return 'LIKELY (26-50%)';
+    default:
+      return prob;
+  }
 }
 
 // Get district level styling details based on active dataset
@@ -527,9 +591,9 @@ function displayDistrictDetails(feature, customName = null) {
   const badge = document.getElementById('detail-warning-badge');
   badge.innerText = data.level.toUpperCase();
 
-  document.getElementById('detail-intensity').innerText = data.intensity;
-  document.getElementById('detail-hazard').innerText = data.warning;
-  document.getElementById('detail-probability').innerText = data.probability;
+  document.getElementById('detail-intensity').innerText = formatIntensity(data.intensity);
+  document.getElementById('detail-hazard').innerText = formatHazard(data.warning);
+  document.getElementById('detail-probability').innerText = formatProbability(data.probability);
 
   // Toggle Micro trend list (only relevant in May 19 7-day timeline mode)
   const trendContainer = document.getElementById('detail-trend-container');
@@ -594,7 +658,7 @@ function updateStatistics() {
       if (!d) { grey++; return; }
       if (d.level === 'red') red++;
       else if (d.level === 'orange') orange++;
-      else if (d.level === 'yellow') yellow++;
+      else if (d.level === 'yellow' || d.level === 'green-yellow') yellow++;
       else if (d.level === 'blue') blue++;
       else grey++;
     });
@@ -1174,8 +1238,44 @@ function initMap() {
   }).addTo(state.map);
 }
 
+// Poll for server-side updates every 5 seconds
+function startUpdatePolling() {
+  // Listen for local tab updates (instant update when edited in same browser)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'custom_may22_data' || e.key === 'custom_may19_data' || e.key === 'custom_may19_forecast_date' || e.key === 'custom_may22_forecast_date') {
+      showToast("Local updates detected. Refreshing dashboard...");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  });
+
+  // Poll server forecast_data.json
+  setInterval(async () => {
+    try {
+      const response = await fetch('forecast_data.json?_=' + Date.now());
+      if (response.ok) {
+        const data = await response.json();
+        const signature = JSON.stringify(data);
+        if (state.lastDataSignature === null) {
+          state.lastDataSignature = signature;
+        } else if (state.lastDataSignature !== signature) {
+          state.lastDataSignature = signature;
+          showToast("New weather forecast update detected! Reloading dashboard...");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        }
+      }
+    } catch (e) {
+      console.warn("Update check failed:", e);
+    }
+  }, 5000);
+}
+
 // Trigger initialiser on load, loading custom warning storage first
 window.addEventListener('DOMContentLoaded', async () => {
   await loadCustomData();
   init();
+  startUpdatePolling();
 });
